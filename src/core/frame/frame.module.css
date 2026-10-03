@@ -1,0 +1,123 @@
+.frame {
+  position: fixed;
+  inset: 0;
+  padding: var(--safe);
+  display: grid;
+  grid-template-rows: calc(64 * var(--u)) minmax(0, 1fr) calc(28 * var(--u));
+  row-gap: calc(12 * var(--u));
+  background: var(--core-bg);
+  color: var(--core-text);
+}
+
+.top {
+  display: flex;
+  align-items: center;
+  gap: calc(24 * var(--u));
+  min-width: 0;
+}
+
+.heading {
+  flex: 1;
+  min-width: 0;
+  font-size: calc(22 * var(--u));
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--core-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.fixture {
+  font-size: calc(18 * var(--u));
+  font-weight: 600;
+  padding: calc(4 * var(--u)) calc(12 * var(--u));
+  border: calc(2 * var(--u)) dashed var(--amber, #ffb020);
+  color: var(--amber, #ffb020);
+  border-radius: calc(6 * var(--u));
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.topRight {
+  display: flex;
+  align-items: center;
+  gap: calc(28 * var(--u));
+}
+
+.clock {
+  text-align: right;
+  line-height: 1;
+}
+.clockTime {
+  font-size: calc(44 * var(--u));
+  font-weight: 600;
+}
+.clockDate {
+  margin-top: calc(4 * var(--u));
+  font-size: calc(18 * var(--u));
+  color: var(--core-muted);
+}
+
+.badge {
+  text-align: right;
+  line-height: 1.15;
+  --badge: var(--good, #3dff9a);
+}
+.badge[data-state="stale"] {
+  --badge: var(--amber, #ffb020);
+}
+.badge[data-state="offline"] {
+  --badge: var(--hot, #ff4d4d);
+}
+.badgeRow {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: calc(8 * var(--u));
+}
+.badgeDot {
+  width: calc(14 * var(--u));
+  height: calc(14 * var(--u));
+  border-radius: 50%;
+  background: var(--badge);
+}
+.badgeWord {
+  font-size: calc(22 * var(--u));
+  font-weight: 600;
+  color: var(--badge);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.badgeAge,
+.badgeReason {
+  font-size: calc(18 * var(--u));
+  color: var(--core-muted);
+}
+.badgeReason {
+  color: var(--badge);
+}
+
+.stage {
+  position: relative;
+  min-height: 0;
+  min-width: 0;
+}
+
+.bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: calc(18 * var(--u));
+  color: var(--core-muted);
+  letter-spacing: 0.04em;
+}
+.wordmark {
+  font-weight: 600;
+}
+.packWordmark {
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
