@@ -1,4 +1,5 @@
 import type { FunctionModule } from "../../core/registry";
+import "./styles/brand.css";
 
 export const EMM_LAYOUTS = ["warroom", "projects", "pulse", "goals"] as const;
 export type EmmLayout = (typeof EMM_LAYOUTS)[number];

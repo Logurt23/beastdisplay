@@ -84,6 +84,8 @@ export function App({ initialConfig, search }: { initialConfig?: Config; search?
       clockTimeZone={showClock ? config.clock.timeZone : null}
       status={status}
       packWordmark={module?.wordmark}
+      packId={module?.id}
+      packLogo={module?.logo}
       heading={current.kind === "function" ? LAYOUT_TITLES[current.layout] ?? current.layout : undefined}
     >
       <ErrorBoundary key={targetKey(current)} fallback={<BlockedState title="Display error" detail="This view failed to render. It will retry on the next rotation or reload." />}>

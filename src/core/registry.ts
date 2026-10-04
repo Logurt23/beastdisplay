@@ -17,6 +17,11 @@ export interface FunctionModule {
   title: string;
   /** Small wordmark shown opposite the BeastDisplay mark while the pack is on screen. */
   wordmark: string;
+  /**
+   * Optional brand mark shown beside the heading while the pack is on screen.
+   * Path under public/ (e.g. "/brand/emm-logo.svg"). Without it the wordmark text is shown.
+   */
+  logo?: string;
   layouts: readonly string[];
   defaultLayout: string;
   /** Packs that want the clock turn it on through their layout; core owns the clock. */

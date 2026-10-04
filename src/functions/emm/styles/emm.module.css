@@ -57,8 +57,10 @@
   flex-direction: column;
   background: var(--panel);
   border: 1px solid var(--panel-border);
+  border-top: calc(3 * var(--u)) solid var(--brand-primary, var(--panel-border));
   border-radius: calc(10 * var(--u));
   padding: calc(14 * var(--u)) calc(18 * var(--u));
+  background-image: linear-gradient(180deg, var(--brand-glow, transparent), transparent calc(80 * var(--u)));
   color: var(--text);
   overflow: hidden;
 }
@@ -75,7 +77,7 @@
   font-weight: 600;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--muted);
+  color: var(--brand-secondary, var(--muted));
 }
 .panelMeta {
   font-size: calc(18 * var(--u));
@@ -94,7 +96,7 @@
   background: var(--panel-border);
 }
 .dotOn {
-  background: var(--cyan);
+  background: var(--brand-primary, var(--cyan));
 }
 .panelBody {
   flex: 1;
@@ -428,8 +430,8 @@
   overflow: hidden;
 }
 .today {
-  border-color: var(--cyan);
-  box-shadow: inset 0 0 0 1px var(--cyan);
+  border-color: var(--brand-primary, var(--cyan));
+  box-shadow: inset 0 0 0 1px var(--brand-primary, var(--cyan));
 }
 .dayHead {
   display: flex;
@@ -444,7 +446,7 @@
   color: var(--muted);
 }
 .today .dayName {
-  color: var(--cyan);
+  color: var(--brand-primary, var(--cyan));
 }
 .dayNum {
   font-size: calc(20 * var(--u));

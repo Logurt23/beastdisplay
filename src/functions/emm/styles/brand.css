@@ -1,0 +1,15 @@
+/*
+ * EMM Advertising brand tokens, scoped to the EMM pack (core stays neutral).
+ * The board keeps the section 9 night war room; brand color is the accent on
+ * top of it. Status and due colors never change with the brand, so meaning
+ * stays readable.
+ *
+ * PENDING: real EMM brand values. These defaults are the section 9 accent until
+ * Logan supplies the logo and hex codes.
+ */
+[data-pack="emm"] {
+  --brand-primary: #3dd6c6;
+  --brand-secondary: #e8eef8;
+  --brand-ink: #07090d;
+  --brand-glow: rgba(61, 214, 198, 0.12);
+}
