@@ -12,3 +12,7 @@
   --brand-ink: #000000; /* EMM black */
   --brand-glow: rgba(88, 248, 184, 0.09);
 }
+/* Night only: panels a touch more see-through so the Nexus field (Field.tsx) shows behind them. */
+:root:not([data-theme="day"]) [data-pack="emm"] {
+  --panel: rgba(16, 21, 29, 0.8);
+}

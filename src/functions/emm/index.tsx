@@ -7,6 +7,7 @@ import { BoardPoller, type PollSnapshot } from "./api";
 import { useReducedMotion } from "./hooks";
 import { LAYOUTS } from "./layouts/Layouts";
 import { EMM_LAYOUTS, type EmmLayout } from "./meta";
+import { Field } from "./panels/Field";
 import { Empty } from "./panels/Panel";
 import { chicagoDate } from "./time";
 import styles from "./styles/emm.module.css";
@@ -63,7 +64,12 @@ export default function EmmPack({ layout, config, fnConfig, onStatus }: Function
   const reduced = useReducedMotion();
   const today = useChicagoToday();
   const Layout = LAYOUTS[(EMM_LAYOUTS as readonly string[]).includes(layout) ? (layout as EmmLayout) : "warroom"];
-  const reporter = <StatusReporter snap={snap} settings={settings} onStatus={onStatus} />;
+  const reporter = (
+    <>
+      <Field />
+      <StatusReporter snap={snap} settings={settings} onStatus={onStatus} />
+    </>
+  );
 
   if (!settings.nexusUrl) {
     return (

@@ -1,0 +1,83 @@
+/*
+ * Ported from Nexus src/styles/globals.css (.field, .bloom, .letters) and its
+ * EMM wing tokens (core #5EFEBF, deep #0D7850, letters at 10% opacity), so the
+ * war room and Nexus share one room. Sizes stay in vw/vh/vmax like Nexus; the
+ * blur scales with --u so 4K matches 1080p.
+ */
+@font-face {
+  font-family: "Barlow Field";
+  src: url("/fonts/barlow-latin-900-normal.woff2") format("woff2");
+  font-weight: 900;
+  font-display: swap;
+}
+
+.field {
+  --field-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --field-deep: #0d7850;
+  --field-core: var(--brand-primary, #5efebf);
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  overflow: hidden;
+}
+.bloom {
+  position: absolute;
+  width: 70vmax;
+  height: 70vmax;
+  border-radius: 50%;
+  filter: blur(calc(60 * var(--u)));
+  will-change: transform;
+}
+.bloomA {
+  background: radial-gradient(circle, color-mix(in srgb, var(--field-deep) 55%, transparent), transparent 65%);
+  left: -20vmax;
+  top: -10vmax;
+  animation: bloomA 28s var(--field-ease) infinite alternate;
+}
+.bloomB {
+  background: radial-gradient(circle, color-mix(in srgb, var(--field-deep) 45%, transparent), transparent 65%);
+  right: -25vmax;
+  bottom: -20vmax;
+  animation: bloomB 34s var(--field-ease) infinite alternate;
+}
+.bloomC {
+  background: radial-gradient(circle, color-mix(in srgb, var(--field-core) 10%, transparent), transparent 60%);
+  left: 30vw;
+  top: 20vh;
+  animation: bloomC 40s var(--field-ease) infinite alternate;
+}
+@keyframes bloomA { to { transform: translate3d(12vw, 8vh, 0); } }
+@keyframes bloomB { to { transform: translate3d(-10vw, -12vh, 0); } }
+@keyframes bloomC { to { transform: translate3d(-8vw, 10vh, 0); } }
+
+.letters {
+  position: absolute;
+  left: -14vw;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: "Barlow Field", "Barlow", system-ui, sans-serif;
+  font-weight: 900;
+  font-size: 42vw;
+  line-height: 1;
+  letter-spacing: 0.08em;
+  color: var(--brand-secondary, #f4f7f1);
+  opacity: 0.1;
+  white-space: nowrap;
+  will-change: transform;
+  animation: letters 36s var(--field-ease) infinite alternate;
+}
+@keyframes letters { to { transform: translate3d(2vw, calc(-50% + 1vh), 0); } }
+
+:global(:root[data-theme="day"]) .field {
+  opacity: 0.35;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bloomA,
+  .bloomB,
+  .bloomC,
+  .letters {
+    animation: none;
+  }
+}
