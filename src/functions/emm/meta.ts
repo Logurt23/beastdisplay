@@ -9,6 +9,7 @@ export const emmModule: FunctionModule = {
   id: "emm",
   title: "EMM board",
   wordmark: "EMM Advertising",
+  logo: "/brand/emm-logo-light.png",
   layouts: EMM_LAYOUTS,
   defaultLayout: "warroom",
   wantsClock: true,

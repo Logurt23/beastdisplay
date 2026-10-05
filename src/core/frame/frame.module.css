@@ -24,7 +24,7 @@
   gap: calc(18 * var(--u));
 }
 .headingLogo {
-  height: calc(52 * var(--u));
+  height: calc(60 * var(--u));
   width: auto;
   flex: none;
 }

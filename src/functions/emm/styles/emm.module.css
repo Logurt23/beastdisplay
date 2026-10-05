@@ -242,7 +242,7 @@
 .loadBar > span {
   display: block;
   height: 100%;
-  background: var(--cyan);
+  background: var(--brand-primary, var(--cyan));
   transition: width var(--motion-slow) ease-out;
 }
 .loadCount {
