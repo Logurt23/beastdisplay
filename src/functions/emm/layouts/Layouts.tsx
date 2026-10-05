@@ -17,6 +17,8 @@ export interface LayoutProps {
   today: string;
   lobbyMode: boolean;
   reduced: boolean;
+  /** Config `functions.emm.developers`: who gets a New Development lane. */
+  developers?: readonly string[];
 }
 
 /** One panel failing never blanks the board. Resets on the next payload. */

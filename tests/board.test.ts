@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { developmentLanes, dueToday, inStage, projectsToday, teamToday } from "../src/functions/emm/board";
+import { developmentLanes, unassignedDevelopment, dueToday, inStage, projectsToday, teamToday } from "../src/functions/emm/board";
 import { deriveStage } from "../src/functions/emm/normalize";
 import type { Assignee, Project } from "../src/functions/emm/types";
 
@@ -34,6 +34,28 @@ describe("developmentLanes", () => {
     expect(lanes.map((l) => l.id)).toEqual(["u1", "u2", "__unassigned"]);
     expect(lanes[0].projects.map((x) => x.id)).toEqual(["a1", "a2", "a-unranked"]);
     expect(lanes[1].projects.map((x) => x.id)).toEqual(["b1"]);
+  });
+});
+
+describe("developmentLanes with configured developers", () => {
+  it("shows one lane per developer in config order, even when empty, and leaves out others", () => {
+    const cy: Assignee = { id: "u3", name: "Cy Example", initials: "CE" };
+    const lanes = developmentLanes(
+      [p("b1", { assignee: bo }), p("c1", { assignee: cy }), p("x", {})],
+      ["bo", "Dee"],
+    );
+    expect(lanes.map((l) => l.assignee?.name)).toEqual(["Bo Example", "Dee"]);
+    expect(lanes[1].projects).toEqual([]);
+    expect(lanes.flatMap((l) => l.projects.map((x) => x.id))).not.toContain("c1");
+  });
+
+  it("counts unassigned development work for the header", () => {
+    expect(unassignedDevelopment([p("x", {}), p("y", { stage: "edits" }), p("z", { status: "done" }), p("a", { assignee: amy })])).toBe(1);
+  });
+
+  it("matches by assignee id too", () => {
+    const lanes = developmentLanes([p("a1", { assignee: amy })], ["u1"]);
+    expect(lanes.map((l) => l.id)).toEqual(["u1"]);
   });
 });
 

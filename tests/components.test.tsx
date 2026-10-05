@@ -129,6 +129,16 @@ describe("Warroom layout", () => {
       expect(screen.getByLabelText(label)).toBeTruthy();
   });
 
+  it("gives New Development lanes only to the configured developers", () => {
+    const Warroom = LAYOUTS.warroom;
+    const { container } = render(
+      <Warroom board={A} today={today} lobbyMode={false} reduced={false} developers={["Logan", "Michael"]} />,
+    );
+    const names = [...container.querySelectorAll("[data-lane]")].map((el) => el.querySelector("[class*=laneName]")?.textContent);
+    expect(names).toEqual(["Logan", "Michael"]);
+    expect(screen.getByText("1 unassigned")).toBeTruthy();
+  });
+
   it("shows each person's numbered queue and what is due today", () => {
     const Warroom = LAYOUTS.warroom;
     const { container } = render(<Warroom board={A} today={today} lobbyMode={false} reduced={false} />);

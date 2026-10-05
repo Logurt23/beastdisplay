@@ -18,6 +18,9 @@ window.BEASTDISPLAY_CONFIG = {
       token: "SET_ON_HOST",
       pollSeconds: 15,
       timeoutMs: 8000,
+      // Who gets a New Development lane, in order: first names or Nexus assignee ids.
+      // Leave empty to give everyone with development work a lane.
+      developers: ["Logan", "Michael"],
     },
   },
 };

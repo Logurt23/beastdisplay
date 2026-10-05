@@ -16,6 +16,8 @@ export interface EmmSettings {
   token: string;
   pollSeconds: number;
   timeoutMs: number;
+  /** Who gets a New Development lane: assignee ids or first names. Empty: everyone with dev work. */
+  developers: string[];
 }
 
 /** Reads the pack's slice of runtime config. nexusUrl falls back to the build-time default. */
@@ -28,6 +30,9 @@ export function emmSettings(fn: Record<string, unknown>): EmmSettings {
     token: typeof fn.token === "string" ? fn.token : "",
     pollSeconds: pos(fn.pollSeconds, 15),
     timeoutMs: pos(fn.timeoutMs, 8000),
+    developers: Array.isArray(fn.developers)
+      ? fn.developers.filter((d): d is string => typeof d === "string" && d.trim() !== "")
+      : [],
   };
 }
 
@@ -79,7 +84,7 @@ export default function EmmPack({ layout, config, fnConfig, onStatus }: Function
   return (
     <>
       {reporter}
-      <Layout board={snap.board} today={today} lobbyMode={config.lobbyMode} reduced={reduced} />
+      <Layout board={snap.board} today={today} lobbyMode={config.lobbyMode} reduced={reduced} developers={settings.developers} />
     </>
   );
 }

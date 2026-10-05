@@ -21,12 +21,24 @@ const byRank = (a: Project, b: Project) => {
   return 0;
 };
 
+/** True when `who` (a config entry: assignee id or first name) names this assignee. Case-insensitive. */
+export function matchesPerson(a: Assignee, who: string): boolean {
+  const w = who.trim().toLowerCase();
+  return w !== "" && (a.id.toLowerCase() === w || a.name.toLowerCase() === w || (a.name.split(/\s+/)[0] ?? "").toLowerCase() === w);
+}
+
 /**
  * One lane per person with their open development projects, in queue order:
- * rank first (unranked after), then the Projects sort. People with the most
- * work come first; unassigned work is its own lane at the end.
+ * rank first (unranked after), then the Projects sort.
+ *
+ * With `developers` set (config `functions.emm.developers`), there is exactly
+ * one lane per developer in that order, shown even when empty; development
+ * work assigned to anyone else is left out (it still shows in Team today),
+ * and unassigned work gets no lane (the header counts it instead).
+ * Without it, everyone with development work gets a lane, busiest first, and
+ * unassigned work is its own lane at the end.
  */
-export function developmentLanes(projects: readonly Project[]): Lane[] {
+export function developmentLanes(projects: readonly Project[], developers: readonly string[] = []): Lane[] {
   const open = sortProjects(projects.filter((p) => p.stage === "development" && p.status !== "done"));
   const map = new Map<string, Lane>();
   for (const p of open) {
@@ -35,12 +47,30 @@ export function developmentLanes(projects: readonly Project[]): Lane[] {
     lane.projects.push(p);
     map.set(id, lane);
   }
-  const lanes = [...map.values()];
-  for (const l of lanes) l.projects.sort((a, b) => byRank(a, b) || open.indexOf(a) - open.indexOf(b));
-  return lanes.sort((a, b) => {
-    if (!a.assignee !== !b.assignee) return a.assignee ? -1 : 1;
-    return b.projects.length - a.projects.length || (a.assignee?.name ?? "").localeCompare(b.assignee?.name ?? "");
-  });
+  const all = [...map.values()];
+  for (const l of all) l.projects.sort((a, b) => byRank(a, b) || open.indexOf(a) - open.indexOf(b));
+  const unassigned = all.filter((l) => !l.assignee);
+
+  if (developers.length > 0) {
+    const lanes = developers.map((who): Lane => {
+      const hit = all.find((l) => l.assignee && matchesPerson(l.assignee, who));
+      if (hit) return hit;
+      const name = who.trim();
+      return { id: `__dev_${name.toLowerCase()}`, assignee: { id: name, name, initials: name.slice(0, 1).toUpperCase() }, projects: [] };
+    });
+    return lanes;
+  }
+
+  const named = all.filter((l) => l.assignee);
+  named.sort(
+    (a, b) => b.projects.length - a.projects.length || (a.assignee?.name ?? "").localeCompare(b.assignee?.name ?? ""),
+  );
+  return [...named, ...unassigned];
+}
+
+/** Open development work with nobody on it. */
+export function unassignedDevelopment(projects: readonly Project[]): number {
+  return projects.filter((p) => p.stage === "development" && p.status !== "done" && !p.assignee).length;
 }
 
 export function inStage(projects: readonly Project[], stage: Stage): Project[] {

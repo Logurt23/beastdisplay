@@ -26,7 +26,19 @@ const BUCKET_WORD = { overdue: "Overdue", today: "Today", soon: "Soon", schedule
  * (open work not in Pending, from the board) on the left, who's on what (one lane per person) in the middle, due today on
  * the right, ticker underneath. Tone comes from `tone` only.
  */
-export function PulsePanel({ board, today, lobbyMode, reduced }: { board: Board; today: string; lobbyMode: boolean; reduced: boolean }) {
+export function PulsePanel({
+  board,
+  today,
+  lobbyMode,
+  reduced,
+  developers = [],
+}: {
+  board: Board;
+  today: string;
+  lobbyMode: boolean;
+  reduced: boolean;
+  developers?: readonly string[];
+}) {
   const pt = projectsToday(board.projects, today);
   return (
     <Panel title="Pulse" className={styles.pulse}>
@@ -45,7 +57,7 @@ export function PulsePanel({ board, today, lobbyMode, reduced }: { board: Board;
             }}
           />
         </div>
-        <Lanes projects={board.projects} today={today} lobbyMode={lobbyMode} />
+        <Lanes projects={board.projects} developers={developers} today={today} lobbyMode={lobbyMode} />
         <DueToday projects={board.projects} today={today} lobbyMode={lobbyMode} />
       </div>
       {lobbyMode ? null : <Ticker items={board.pulse.ticker} reduced={reduced} />}

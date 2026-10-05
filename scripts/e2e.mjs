@@ -38,7 +38,7 @@ function writeConfig(over = {}, emm = {}) {
     ],
     targets: [],
     rotateSeconds: 0,
-    functions: { emm: { enabled: true, nexusUrl: NEXUS, token: "dev-token", pollSeconds: 2, timeoutMs: 1500, ...emm } },
+    functions: { emm: { enabled: true, nexusUrl: NEXUS, token: "dev-token", pollSeconds: 2, timeoutMs: 1500, developers: ["Logan", "Michael"], ...emm } },
     ...over,
   };
   writeFileSync("config.local.js", `window.BEASTDISPLAY_CONFIG = ${JSON.stringify(cfg, null, 2)};\n`);
