@@ -7,7 +7,7 @@ import { fetchPulse } from "./mothership.mjs";
 import { createRateLimiter } from "./rateLimit.mjs";
 import { createDisplayHandler } from "./routes.mjs";
 
-const ORIGIN = "https://display.emmadvertising.com";
+const ORIGIN = "https://warroom.emmadvertising.com";
 
 async function withServer(opts, fn) {
   const logs = [];

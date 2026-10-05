@@ -5,9 +5,10 @@ import { usePager, useRowsThatFit } from "../hooks";
 import type { Project } from "../types";
 import styles from "../styles/emm.module.css";
 import { firstName } from "./labels";
+import { LoopList } from "./LoopList";
 
 const MAX_LANES = 4;
-const MAX_CARDS = 5;
+const MAX_CARDS = 4;
 /** Card height plus gap, 1080p px. */
 const CARD_PX = 62;
 
@@ -55,8 +56,6 @@ export function Lanes({
 function LaneColumn({ lane, today, lobbyMode, columns }: { lane: Lane; today: string; lobbyMode: boolean; columns: number }) {
   const ref = useRef<HTMLDivElement>(null);
   const fit = Math.min(MAX_CARDS * columns, useRowsThatFit(ref, CARD_PX, 3) * columns);
-  const shown = lane.projects.slice(0, fit);
-  const more = lane.projects.length - shown.length;
   return (
     <div className={styles.lane} data-lane={lane.id}>
       <div className={styles.laneHead}>
@@ -64,31 +63,37 @@ function LaneColumn({ lane, today, lobbyMode, columns }: { lane: Lane; today: st
         <span className={styles.laneName}>{lane.assignee ? firstName(lane.assignee.name) : "Unassigned"}</span>
         <span className={`${styles.laneCount} num`}>{lane.projects.length}</span>
       </div>
-      <div ref={ref} className={styles.laneBody} style={{ "--cols": columns } as CSSProperties}>
-        {shown.length === 0 ? <div className={styles.personNextNone}>Nothing queued</div> : null}
-        {shown.map((p, i) => {
-          const due = dueState(p.dueOn, p.status, today);
-          const showClient = p.client && (!lobbyMode || p.lobbySafe);
-          return (
-            <div
-              key={p.id}
-              className={`${styles.laneCard} ${p.priority === "rush" ? styles.rush : ""}`}
-              style={{ "--due": `var(--due-${due.state})` } as CSSProperties}
-              data-status={p.status}
-            >
-              <span className={`${styles.laneRank} num`}>{p.rank ?? i + 1}</span>
-              <span className={styles.laneText}>
-                <span className={styles.laneTitle}>{p.name}</span>
-                <span className={styles.laneSub}>
-                  <span className={styles.laneClient}>{showClient ? p.client : ""}</span>
-                  <span className={`${styles.laneDue} num`}>{due.state === "none" ? "" : due.label}</span>
+      <div ref={ref} className={styles.laneBody}>
+        {lane.projects.length === 0 ? <div className={styles.personNextNone}>Nothing queued</div> : null}
+        <LoopList
+          items={lane.projects}
+          fit={fit}
+          cols={columns}
+          rowPx={CARD_PX}
+          className={styles.laneGrid}
+          keyOf={(p) => p.id}
+          render={(p, i) => {
+            const due = dueState(p.dueOn, p.status, today);
+            const showClient = p.client && (!lobbyMode || p.lobbySafe);
+            return (
+              <div
+                className={`${styles.laneCard} ${p.priority === "rush" ? styles.rush : ""}`}
+                style={{ "--due": `var(--due-${due.state})` } as CSSProperties}
+                data-status={p.status}
+              >
+                <span className={`${styles.laneRank} num`}>{p.rank ?? i + 1}</span>
+                <span className={styles.laneText}>
+                  <span className={styles.laneTitle}>{p.name}</span>
+                  <span className={styles.laneSub}>
+                    <span className={styles.laneClient}>{showClient ? p.client : ""}</span>
+                    <span className={`${styles.laneDue} num`}>{due.state === "none" ? "" : due.label}</span>
+                  </span>
                 </span>
-              </span>
-            </div>
-          );
-        })}
+              </div>
+            );
+          }}
+        />
       </div>
-      <div className={styles.laneMore}>{more > 0 ? `+${more} more` : ""}</div>
     </div>
   );
 }

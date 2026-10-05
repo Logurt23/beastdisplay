@@ -113,6 +113,14 @@ async function main() {
     const titleSize = await page.evaluate(() => parseFloat(getComputedStyle(document.querySelector('[class*="laneTitle"]')).fontSize));
     const expected = name === "4k" ? 44 : 22;
     check(`warroom ${name}: project title ${expected}px`, Math.abs(titleSize - expected) < 0.6, `${titleSize}px`);
+    if (name === "1080p") {
+      const first = () => page.evaluate(() => document.querySelector('[data-lane] [data-looping] [class*="loopCell"]')?.textContent ?? null);
+      const before = await first();
+      await page.waitForTimeout(5_200);
+      const after = await first();
+      check("warroom 1080p: overflowing lane loops instead of '+N more'", before !== null && after !== null && before !== after, `${before} -> ${after}`);
+      check("warroom 1080p: no '+N more' text", !(await page.getByText(/\+\d+ more/).count()));
+    }
     const unexpectedHosts = [...hosts].filter((h) => h !== "127.0.0.1:4173" && h !== "127.0.0.1:8787");
     check(`warroom ${name}: no third-party requests`, unexpectedHosts.length === 0, unexpectedHosts.join(", "));
     await context.close();

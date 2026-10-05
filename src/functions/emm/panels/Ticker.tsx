@@ -3,7 +3,7 @@ import { chicagoTime } from "../time";
 import type { TickerItem } from "../types";
 import styles from "../styles/emm.module.css";
 
-const MAX_ITEMS = 12;
+const MAX_ITEMS = 15;
 
 function newestFirst(items: readonly TickerItem[]): TickerItem[] {
   return [...items].sort((a, b) => (Date.parse(b.at) || 0) - (Date.parse(a.at) || 0)).slice(0, MAX_ITEMS);

@@ -427,19 +427,25 @@
 .laneBody {
   flex: 1;
   min-height: 0;
-  display: grid;
-  grid-template-columns: repeat(var(--cols, 1), minmax(0, 1fr));
-  grid-auto-rows: calc(56 * var(--u));
-  align-content: start;
-  gap: calc(6 * var(--u));
   overflow: hidden;
 }
-.laneMore {
-  flex: none;
-  height: calc(20 * var(--u));
-  font-size: calc(16 * var(--u));
-  color: var(--muted);
-  text-align: right;
+/* LoopList: a grid that slides up one row at a time */
+.loopTrack {
+  display: grid;
+  grid-template-columns: repeat(var(--cols, 1), minmax(0, 1fr));
+  align-content: start;
+  will-change: transform;
+}
+.loopClip {
+  overflow: hidden;
+}
+.loopCell {
+  min-width: 0;
+  min-height: 0;
+}
+.laneGrid {
+  grid-auto-rows: calc(56 * var(--u));
+  gap: calc(6 * var(--u));
 }
 .laneSub {
   display: flex;
@@ -453,6 +459,7 @@
 .laneCard {
   --due: var(--due-none);
   flex: none;
+  box-sizing: border-box;
   display: grid;
   grid-template-columns: auto minmax(0, 1fr);
   align-items: center;
@@ -648,10 +655,22 @@
 .personTasks {
   flex: 1;
   min-height: 0;
-  display: flex;
-  flex-direction: column;
-  gap: calc(4 * var(--u));
   overflow: hidden;
+}
+.personTaskList {
+  grid-auto-rows: calc(32 * var(--u));
+  gap: calc(4 * var(--u));
+}
+.personCount {
+  font-size: calc(20 * var(--u));
+  font-weight: 600;
+  color: var(--muted);
+}
+.personDue + .personCount {
+  margin-left: calc(8 * var(--u));
+}
+.laneHead > .laneName + .personCount {
+  margin-left: auto;
 }
 .personTask {
   --due: var(--due-none);
@@ -832,8 +851,13 @@
   gap: calc(4 * var(--u));
   overflow: hidden;
 }
+.dayEventList {
+  grid-auto-rows: calc(44 * var(--u));
+  gap: calc(4 * var(--u));
+}
 .dayEvent {
   flex: none;
+  height: calc(44 * var(--u));
   font-size: calc(18 * var(--u));
   line-height: 1.2;
   overflow: hidden;

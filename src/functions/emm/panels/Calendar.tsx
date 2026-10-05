@@ -2,9 +2,12 @@ import { useMemo, type CSSProperties } from "react";
 import { buildWeek } from "../calendar";
 import type { Board } from "../types";
 import styles from "../styles/emm.module.css";
+import { LoopList } from "./LoopList";
 import { Panel } from "./Panel";
 
 const MAX_EVENTS = 2;
+/** One event (two lines) plus the gap, 1080p px. */
+const EVENT_PX = 48;
 
 /** Section 6D. Monday-start Chicago week containing today; today pinned. */
 export function CalendarPanel({ board, today, lobbyMode }: { board: Board; today: string; lobbyMode: boolean }) {
@@ -13,7 +16,6 @@ export function CalendarPanel({ board, today, lobbyMode }: { board: Board; today
     <Panel title="This week">
       <div className={styles.week}>
         {days.map((d) => {
-          const extra = d.events.length - MAX_EVENTS;
           return (
             <div key={d.date} className={`${styles.day} ${d.isToday ? styles.today : ""}`} data-date={d.date}>
               <div className={styles.dayHead}>
@@ -24,11 +26,19 @@ export function CalendarPanel({ board, today, lobbyMode }: { board: Board; today
                 {lobbyMode ? (
                   d.events.length > 0 ? <div className={styles.dayEvent}>{d.events.length} events</div> : null
                 ) : (
-                  d.events.slice(0, MAX_EVENTS).map((e) => (
-                    <div key={e.id} className={styles.dayEvent} data-kind={e.kind ?? undefined}>
-                      <span className={`${styles.eventTime} num`}>{e.time}</span> {e.title}
-                    </div>
-                  ))
+                  <LoopList
+                    items={d.events}
+                    fit={MAX_EVENTS}
+                    rowPx={EVENT_PX}
+                    holdMs={5_000}
+                    className={styles.dayEventList}
+                    keyOf={(e) => e.id}
+                    render={(e) => (
+                      <div className={styles.dayEvent} data-kind={e.kind ?? undefined}>
+                        <span className={`${styles.eventTime} num`}>{e.time}</span> {e.title}
+                      </div>
+                    )}
+                  />
                 )}
               </div>
               <div className={styles.dayFoot}>
@@ -37,7 +47,6 @@ export function CalendarPanel({ board, today, lobbyMode }: { board: Board; today
                     <span className="num">{d.dueCount}</span> due
                   </div>
                 ) : null}
-                {!lobbyMode && extra > 0 ? <div className={styles.more}>+{extra}</div> : null}
               </div>
             </div>
           );

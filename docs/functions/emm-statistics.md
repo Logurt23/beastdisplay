@@ -46,11 +46,11 @@ These are already in the build order (section 6.1) and count toward the 25.
 
 ### 3. `events_ticker`
 - label: Recent events
-- counts: the most recent event texts (form submit, call, other) with time
-- source: mothership
+- counts: the most recent git activity (releases, merged and opened pull requests, pushes, tags) with time, newest 15. Changed 2026-10-05 at Logan's request; originally Mothership form submits and calls.
+- source: github, through Nexus (`nexus-display/github.mjs`)
 - grain: live
 - tone: `info` per item, from Nexus; no aggregate tone
-- lobby safe: no (event text can carry client or caller detail; Nexus would need to redact)
+- lobby safe: no (commit messages and PR titles can carry client detail)
 - status: current
 
 ### 4. `projects_by_status`

@@ -11,7 +11,7 @@ window.BEASTDISPLAY_CONFIG = {
   defaultTarget: { kind: "function", fn: "emm", layout: "warroom" },
   // Exact origins. frame: true only when the operator confirmed the origin allows
   // being framed by this display host. frame: false opens by top-level navigation.
-  allowlist: [{ origin: "https://display.emmadvertising.com", frame: false }],
+  allowlist: [{ origin: "https://warroom.emmadvertising.com", frame: false }],
   // Targets cycled when rotateSeconds > 0. Empty: rotate the pinned function's layouts.
   targets: [],
   rotateSeconds: 0,

@@ -7,16 +7,23 @@ import { createDisplayHandler } from "./nexus-display/routes.mjs";
 import { tokensFromEnv } from "./nexus-display/auth.mjs";
 import { buildBoard } from "./nexus-display/board.mjs";
 import { fetchPulse } from "./nexus-display/mothership.mjs";
+import { gitActivityFromEnv } from "./nexus-display/github.mjs";
+
+// GITHUB_REPOS="owner/a,owner/b", GITHUB_TOKEN=<read-only token>, GITHUB_PEOPLE="githublogin:Logan,..."
+const gitActivity = gitActivityFromEnv();
 
 const display = createDisplayHandler({
   getTokens: tokensFromEnv("DISPLAY_TOKENS"),            // "office-main:<token>[,office-main:<next>]"
-  allowedOrigins: ["https://display.emmadvertising.com"],
+  allowedOrigins: ["https://warroom.emmadvertising.com"],
   getBoard: async () =>
     buildBoard({
       projects: await nexusProjectsForDisplay(),           // map Nexus field names to section 7 here
       events: await nexusEventsForDisplay(),
       goals: await nexusGoalsForDisplay(),
-      pulse: await fetchPulse({ credentials: mothershipCredentials(), pull: mothershipPull }),
+      pulse: {
+        ...(await fetchPulse({ credentials: mothershipCredentials(), pull: mothershipPull })),
+        ticker: await gitActivity(),                       // Pulse ticker = git activity, newest 15
+      },
     }),
 });
 
@@ -40,6 +47,10 @@ const display = createDisplayHandler({
 - `Cache-Control: no-store` on every response.
 - `buildBoard` fills missing arrays with `[]` and stamps `generatedAt`, `timezone: "America/Chicago"`, `staleAfterSeconds: 60`.
 - `fetchPulse` returns `{ tiles: [], ticker: [], sourceStatus: "unconfigured" }` until Mothership credentials and a pull function exist, and `sourceStatus: "error"` if the pull throws. It never fakes numbers. What Mothership is remains an open item.
+
+## Git activity ticker (`github.mjs`)
+
+The ticker under Pulse shows the team's GitHub activity: releases, merged and opened pull requests, pushes and tags, newest first, at most 15. Set `GITHUB_REPOS` (comma-separated `owner/name`), a read-only `GITHUB_TOKEN` (fine-grained, Contents and Metadata read; optional for public repos but the unauthenticated limit is 60 requests an hour), and optionally `GITHUB_PEOPLE` to show names instead of GitHub logins. Each repo is fetched at most once a minute with an ETag, whatever the number of displays, and a failing repo keeps its last good events. The display loops the list and swaps new items in at the loop boundary, so the newest replace the oldest.
 
 ## What still needs Nexus access
 

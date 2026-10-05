@@ -7,13 +7,14 @@ import { weekdayShort } from "../../../core/tz";
 import type { Project, Stage } from "../types";
 import styles from "../styles/emm.module.css";
 import { firstName } from "./labels";
+import { LoopList } from "./LoopList";
 import { Empty, Panel } from "./Panel";
 
 const PER_PAGE = 5;
 /** Task row height plus gap, 1080p px. */
 const TASK_PX = 36;
 
-const STAGE_TAG: Record<Stage, string> = { development: "Dev", edits: "Edit", launch: "Live", pending: "Hold" };
+const STAGE_TAG: Record<Stage, string> = { development: "Dev", edits: "Edit", launch: "Push", pending: "Hold" };
 
 /**
  * Team today: one card per person with what they should be doing today and
@@ -60,8 +61,6 @@ function nextLabel(n: NextEvent, today: string): string {
 function PersonCard({ day, today, lobbyMode }: { day: PersonDay; today: string; lobbyMode: boolean }) {
   const ref = useRef<HTMLDivElement>(null);
   const fit = useRowsThatFit(ref, TASK_PX, 3);
-  const shown = day.tasks.slice(0, fit);
-  const more = day.tasks.length - shown.length;
   const dueNow = day.tasks.filter((p) => p.dueOn !== null && p.dueOn <= today).length;
   return (
     <div className={styles.person} data-person={day.id}>
@@ -69,6 +68,7 @@ function PersonCard({ day, today, lobbyMode }: { day: PersonDay; today: string; 
         <span className={styles.laneInitials}>{day.assignee.initials}</span>
         <span className={styles.laneName}>{firstName(day.assignee.name)}</span>
         {dueNow > 0 ? <span className={`${styles.personDue} num`}>{dueNow} due</span> : null}
+        <span className={`${styles.personCount} num`}>{day.tasks.length}</span>
       </div>
       <div className={styles.personNext} data-now={day.next?.now ? "true" : undefined}>
         {day.next ? (
@@ -81,24 +81,29 @@ function PersonCard({ day, today, lobbyMode }: { day: PersonDay; today: string; 
         )}
       </div>
       <div ref={ref} className={styles.personTasks}>
-        {shown.length === 0 ? <div className={styles.personNextNone}>No open tasks</div> : null}
-        {shown.map((p) => {
-          const due = dueState(p.dueOn, p.status, today);
-          return (
-            <div
-              key={p.id}
-              className={`${styles.personTask} ${p.priority === "rush" ? styles.rush : ""}`}
-              style={{ "--due": `var(--due-${due.state})` } as CSSProperties}
-              data-stage={p.stage}
-            >
-              <span className={styles.stageTag}>{STAGE_TAG[p.stage]}</span>
-              <span className={styles.laneTitle}>{p.name}</span>
-              <span className={`${styles.laneDue} num`}>{due.state === "none" ? "" : due.label}</span>
-            </div>
-          );
-        })}
+        {day.tasks.length === 0 ? <div className={styles.personNextNone}>No open tasks</div> : null}
+        <LoopList
+          items={day.tasks}
+          fit={fit}
+          rowPx={TASK_PX}
+          className={styles.personTaskList}
+          keyOf={(p) => p.id}
+          render={(p) => {
+            const due = dueState(p.dueOn, p.status, today);
+            return (
+              <div
+                className={`${styles.personTask} ${p.priority === "rush" ? styles.rush : ""}`}
+                style={{ "--due": `var(--due-${due.state})` } as CSSProperties}
+                data-stage={p.stage}
+              >
+                <span className={styles.stageTag}>{STAGE_TAG[p.stage]}</span>
+                <span className={styles.laneTitle}>{p.name}</span>
+                <span className={`${styles.laneDue} num`}>{due.state === "none" ? "" : due.label}</span>
+              </div>
+            );
+          }}
+        />
       </div>
-      <div className={styles.laneMore}>{more > 0 ? `+${more} more` : ""}</div>
     </div>
   );
 }

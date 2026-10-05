@@ -1,4 +1,4 @@
-// Production config for display.emmadvertising.com. Copy to config.js on the
+// Production config for warroom.emmadvertising.com. Copy to config.js on the
 // display host and set the token there. Never commit the real token.
 window.BEASTDISPLAY_CONFIG = {
   displayId: "office-main",
@@ -8,7 +8,7 @@ window.BEASTDISPLAY_CONFIG = {
   reloadHours: 6,
   lobbyMode: false,
   defaultTarget: { kind: "function", fn: "emm", layout: "warroom" },
-  allowlist: [{ origin: "https://display.emmadvertising.com", frame: false }],
+  allowlist: [{ origin: "https://warroom.emmadvertising.com", frame: false }],
   targets: [],
   rotateSeconds: 0,
   functions: {

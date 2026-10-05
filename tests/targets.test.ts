@@ -5,7 +5,7 @@ import { FUNCTIONS } from "../src/functions";
 
 const base = parseConfig({
   allowlist: [
-    { origin: "https://display.emmadvertising.com", frame: false },
+    { origin: "https://warroom.emmadvertising.com", frame: false },
     { origin: "https://status.example.com", frame: true },
     { origin: "https://grafana.example.com:3000", frame: true },
   ],
@@ -69,7 +69,7 @@ describe("resolveTargets", () => {
       functions: { emm: { enabled: true } },
       targets: [
         { kind: "function", fn: "emm", layout: "warroom" },
-        { kind: "external", url: "https://display.emmadvertising.com/" },
+        { kind: "external", url: "https://warroom.emmadvertising.com/" },
         { kind: "external", url: "https://status.example.com/" },
       ],
       rotateSeconds: 30,
@@ -80,7 +80,7 @@ describe("resolveTargets", () => {
       { kind: "external", url: "https://status.example.com/", frame: true },
     ]);
     expect(r.rotateSeconds).toBe(30);
-    expect(r.warnings.join(" ")).toContain("display.emmadvertising.com");
+    expect(r.warnings.join(" ")).toContain("warroom.emmadvertising.com");
   });
 
   it("does not rotate layouts when the list has an external target", () => {

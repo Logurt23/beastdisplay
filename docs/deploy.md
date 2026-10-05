@@ -1,6 +1,6 @@
 # Deploy (EMM)
 
-Production: `https://display.emmadvertising.com`, data from `https://nexus.emmadvertising.com`.
+Production: `https://warroom.emmadvertising.com`, data from `https://nexus.emmadvertising.com`.
 
 ## Build
 
@@ -21,7 +21,7 @@ Upload `dist/` to the static host. Then write `config.js` beside `index.html` on
 - `index.html`: `Cache-Control: no-cache`. `/assets/*` (fingerprinted): long-lived immutable cache.
 - Security headers: a CSP that allows only `'self'` plus Nexus in `connect-src`, and no third-party script, font or analytics origins.
 
-Examples: [deploy/nginx.conf](../deploy/nginx.conf) and [deploy/_headers](../deploy/_headers) + [deploy/_redirects](../deploy/_redirects) (Cloudflare Pages or Netlify). Which host serves `display.emmadvertising.com` is still open; pick the matching file.
+Examples: [deploy/nginx.conf](../deploy/nginx.conf) and [deploy/_headers](../deploy/_headers) + [deploy/_redirects](../deploy/_redirects) (Cloudflare Pages or Netlify). Which host serves `warroom.emmadvertising.com` is still open; pick the matching file.
 
 ## Production config
 
@@ -37,7 +37,7 @@ Examples: [deploy/nginx.conf](../deploy/nginx.conf) and [deploy/_headers](../dep
 ## Checks after deploy
 
 - The production URL shows the board with the Chicago clock and a live badge.
-- `curl -s https://display.emmadvertising.com/assets/*.js | grep <token>` finds nothing (or run `npm run check:token` on the build).
-- `curl -I https://display.emmadvertising.com/config.js` shows `Cache-Control: no-cache`.
+- `curl -s https://warroom.emmadvertising.com/assets/*.js | grep <token>` finds nothing (or run `npm run check:token` on the build).
+- `curl -I https://warroom.emmadvertising.com/config.js` shows `Cache-Control: no-cache`.
 - Pull the network on the display device: the badge goes offline and the last board stays.
 - No requests leave for any host other than the display host and Nexus (browser network panel).

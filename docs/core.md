@@ -28,7 +28,7 @@ window.BEASTDISPLAY_CONFIG = {
   reloadHours: 6,
   lobbyMode: false,               // true hides client names unless Nexus sends lobbySafe: true
   defaultTarget: { kind: "function", fn: "emm", layout: "warroom" },
-  allowlist: [{ origin: "https://display.emmadvertising.com", frame: false }],
+  allowlist: [{ origin: "https://warroom.emmadvertising.com", frame: false }],
   targets: [],                    // rotate list; empty rotates the pinned pack's layouts
   rotateSeconds: 0,
   functions: { emm: { enabled: true, nexusUrl: "...", token: "...", pollSeconds: 15, timeoutMs: 8000 } },

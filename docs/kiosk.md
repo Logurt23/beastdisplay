@@ -16,14 +16,14 @@ Launch:
 chromium --kiosk --noerrdialogs --disable-infobars --disable-session-crashed-bubble \
   --no-first-run --no-default-browser-check --disable-pinch \
   --overscroll-history-navigation=0 --check-for-update-interval=31536000 \
-  "https://display.emmadvertising.com/"
+  "https://warroom.emmadvertising.com/"
 ```
 
 (`chrome.exe` with the same flags on Windows.)
 
 - Do **not** use `--incognito` or `--disk-cache-dir=/dev/null`. The display keeps its last good board in `localStorage` and relies on the HTTP cache during a Nexus outage.
 - Zoom 100%.
-- Settings > Performance: add `display.emmadvertising.com` to "Always keep these sites active", and turn Energy Saver off.
+- Settings > Performance: add `warroom.emmadvertising.com` to "Always keep these sites active", and turn Energy Saver off.
 - Crash bubble after a power cut: on each boot, before launching, set `"exited_cleanly": true` and `"exit_type": "Normal"` in the profile's `Default/Preferences`:
 
 ```
@@ -64,7 +64,7 @@ Reboot at 04:00 Chicago every day (cron on Linux, Task Scheduler on Windows). It
 
 ## Known blank-screen causes outside the app
 
-- TLS certificate expiry on `display.emmadvertising.com`: automate renewal on the host.
+- TLS certificate expiry on `warroom.emmadvertising.com`: automate renewal on the host.
 - DNS failure at boot.
 - TV input auto-switch.
 - A Chrome update or "restore pages" prompt (handled by the flags and Preferences fix above).

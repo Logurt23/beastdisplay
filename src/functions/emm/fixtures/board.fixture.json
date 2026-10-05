@@ -22,39 +22,39 @@
     ],
     "ticker": [
       {
-        "id": "evt_f1",
+        "id": "gh_f1",
         "at": "2026-10-03T13:52:00Z",
-        "text": "Form submit \u00b7 Sample Roofing \u00b7 Joplin",
-        "tone": "info"
+        "text": "Logan merged #42 Add hero video \u00b7 sample-site",
+        "tone": "good"
       },
       {
-        "id": "evt_f2",
+        "id": "gh_f2",
         "at": "2026-10-03T13:40:00Z",
-        "text": "Call \u00b7 Sample Dental \u00b7 3m 12s",
+        "text": "Michael pushed 3 commits to main: Fix mobile nav \u00b7 sample-landing",
         "tone": "info"
       },
       {
-        "id": "evt_f3",
+        "id": "gh_f3",
         "at": "2026-10-03T13:21:00Z",
-        "text": "Form submit \u00b7 Sample HVAC \u00b7 Carthage",
-        "tone": "info"
+        "text": "Logan released v1.4.0 \u00b7 beastdisplay",
+        "tone": "good"
       },
       {
-        "id": "evt_f4",
+        "id": "gh_f4",
         "at": "2026-10-03T12:58:00Z",
-        "text": "Call \u00b7 Sample Law \u00b7 missed",
-        "tone": "warn"
-      },
-      {
-        "id": "evt_f5",
-        "at": "2026-10-03T12:30:00Z",
-        "text": "Form submit \u00b7 Sample Auto \u00b7 Webb City",
+        "text": "Michael opened #18 Booking form \u00b7 sample-site",
         "tone": "info"
       },
       {
-        "id": "evt_f6",
+        "id": "gh_f5",
+        "at": "2026-10-03T12:30:00Z",
+        "text": "Logan tagged v1.3.2 \u00b7 sample-landing",
+        "tone": "good"
+      },
+      {
+        "id": "gh_f6",
         "at": "2026-10-03T11:47:00Z",
-        "text": "Call \u00b7 Sample Clinic \u00b7 6m 40s",
+        "text": "Michael pushed to staging \u00b7 sample-site",
         "tone": "info"
       }
     ]
