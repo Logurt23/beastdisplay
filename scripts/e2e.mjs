@@ -38,7 +38,7 @@ function writeConfig(over = {}, emm = {}) {
     ],
     targets: [],
     rotateSeconds: 0,
-    functions: { emm: { enabled: true, nexusUrl: NEXUS, token: "dev-token", pollSeconds: 2, timeoutMs: 1500, developers: ["Logan", "Michael"], ...emm } },
+    functions: { emm: { enabled: true, nexusUrl: NEXUS, token: "dev-token", pollSeconds: 2, timeoutMs: 1500, developers: ["Logan", "Michael"], intro: false, ...emm } },
     ...over,
   };
   writeFileSync("config.local.js", `window.BEASTDISPLAY_CONFIG = ${JSON.stringify(cfg, null, 2)};\n`);
@@ -203,6 +203,33 @@ async function main() {
     const { context, page } = await openPage({ width: 1920, height: 1080 });
     await page.getByText("Display token rejected").first().waitFor({ timeout: 10_000 });
     check("wrong token: 'Display token rejected' shown", true);
+    await context.close();
+    writeConfig();
+  }
+
+  // War Room intro: plays once per tab for 15 s, branded EMM and War Room, never BeastDisplay.
+  {
+    writeConfig({}, { intro: true });
+    const { context, page, errors } = await openPage({ width: 1920, height: 1080 });
+    const intro = page.locator("[data-intro]");
+    await intro.waitFor({ state: "visible", timeout: 5_000 });
+    const text = (await intro.textContent()) ?? "";
+    await page.waitForTimeout(5_500);
+    check("intro: still playing after the board loads", await intro.isVisible());
+    await page.screenshot({ path: `${OUT}/intro-1080p-title.png` });
+    await page.waitForTimeout(3_500);
+    await page.screenshot({ path: `${OUT}/intro-1080p-status.png` });
+    await page.waitForTimeout(3_200);
+    await page.screenshot({ path: `${OUT}/intro-1080p-dissolve.png` });
+    check("intro: shows War Room, not BeastDisplay", /war room/i.test(text) && !/beastdisplay/i.test(text), text.replace(/\s+/g, " "));
+    await intro.waitFor({ state: "detached", timeout: 6_000 });
+    check("intro: gone after about 15 s, board underneath", await page.getByLabel("Pulse").isVisible());
+    check("intro: no console errors", errors.length === 0, errors.join(" | "));
+    await page.reload();
+    await page.getByLabel("Pulse").waitFor({ timeout: 10_000 });
+    check("intro: does not replay in the same tab", (await page.locator("[data-intro]").count()) === 0);
+    check("branded board: no BeastDisplay mark on screen", !(await page.getByText("BeastDisplay", { exact: true }).count()));
+    check("branded board: tab title", (await page.title()) === "War Room · EMM Advertising", await page.title());
     await context.close();
     writeConfig();
   }

@@ -41,7 +41,8 @@ export function KioskFrame({ safeAreaPx, clockTimeZone, status, packWordmark, he
       </header>
       <main className={styles.stage}>{children}</main>
       <footer className={styles.bottom}>
-        <div className={styles.wordmark}>BeastDisplay</div>
+        {/* A branded pack carries its own name; the BeastDisplay mark is only for unbranded use. */}
+        {packLogo ? null : <div className={styles.wordmark}>BeastDisplay</div>}
         {packWordmark && !heading ? <div className={styles.packWordmark}>{packWordmark}</div> : null}
       </footer>
     </div>

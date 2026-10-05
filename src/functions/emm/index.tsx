@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { reloadRuntimeConfig } from "../../core/config";
 import { useSecondTick } from "../../core/frame/Clock";
 import { badgeState, type FrameStatus } from "../../core/frame/status";
@@ -6,8 +6,9 @@ import type { FunctionProps } from "../../core/registry";
 import { BoardPoller, type PollSnapshot } from "./api";
 import { useReducedMotion } from "./hooks";
 import { LAYOUTS } from "./layouts/Layouts";
-import { EMM_LAYOUTS, type EmmLayout } from "./meta";
+import { EMM_LAYOUTS, emmModule, type EmmLayout } from "./meta";
 import { Field } from "./panels/Field";
+import { Intro } from "./panels/Intro";
 import { Empty } from "./panels/Panel";
 import { chicagoDate } from "./time";
 import styles from "./styles/emm.module.css";
@@ -19,6 +20,8 @@ export interface EmmSettings {
   timeoutMs: number;
   /** Who gets a New Development lane: assignee ids or first names. Empty: everyone with dev work. */
   developers: string[];
+  /** Play the 15 s War Room intro once per tab on boot. Config `functions.emm.intro: false` turns it off. */
+  intro: boolean;
 }
 
 /** Reads the pack's slice of runtime config. nexusUrl falls back to the build-time default. */
@@ -34,6 +37,7 @@ export function emmSettings(fn: Record<string, unknown>): EmmSettings {
     developers: Array.isArray(fn.developers)
       ? fn.developers.filter((d): d is string => typeof d === "string" && d.trim() !== "")
       : [],
+    intro: fn.intro !== false,
   };
 }
 
@@ -64,33 +68,29 @@ export default function EmmPack({ layout, config, fnConfig, onStatus }: Function
   const reduced = useReducedMotion();
   const today = useChicagoToday();
   const Layout = LAYOUTS[(EMM_LAYOUTS as readonly string[]).includes(layout) ? (layout as EmmLayout) : "warroom"];
-  const reporter = (
-    <>
-      <Field />
-      <StatusReporter snap={snap} settings={settings} onStatus={onStatus} />
-    </>
-  );
-
+  useEffect(() => {
+    document.title = "War Room · EMM Advertising";
+  }, []);
+  // Field, intro and status reporter sit at one stable spot in the tree, so the
+  // intro is not remounted (and cut short) when the board arrives.
+  let body: ReactNode;
   if (!settings.nexusUrl) {
-    return (
-      <>
-        {reporter}
-        <Empty title="Function not configured" detail="Set functions.emm.nexusUrl in config.js." />
-      </>
-    );
-  }
-  if (!snap?.board) {
-    return (
+    body = <Empty title="Function not configured" detail="Set functions.emm.nexusUrl in config.js." />;
+  } else if (!snap?.board) {
+    body = (
       <div className={styles.waiting}>
-        {reporter}
         <Empty title="Waiting for Nexus" detail={snap?.reason} />
       </div>
     );
+  } else {
+    body = <Layout board={snap.board} today={today} lobbyMode={config.lobbyMode} reduced={reduced} developers={settings.developers} />;
   }
   return (
     <>
-      {reporter}
-      <Layout board={snap.board} today={today} lobbyMode={config.lobbyMode} reduced={reduced} developers={settings.developers} />
+      <Field />
+      {settings.intro && emmModule.logo ? <Intro logo={emmModule.logo} ready={Boolean(snap?.board)} /> : null}
+      <StatusReporter snap={snap} settings={settings} onStatus={onStatus} />
+      {body}
     </>
   );
 }

@@ -25,6 +25,8 @@ window.BEASTDISPLAY_CONFIG = {
       // Who gets a New Development lane, in order: first names or Nexus assignee ids.
       // Leave empty to give everyone with development work a lane.
       developers: ["Logan", "Michael"],
+      // The 15 s War Room intro plays once per tab on boot. Set false to skip it.
+      intro: true,
     },
   },
 };
