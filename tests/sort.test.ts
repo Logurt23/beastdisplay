@@ -11,6 +11,8 @@ const p = (id: string, o: Partial<Project>): Project => ({
   assignee: null,
   dueOn: null,
   lobbySafe: false,
+  stage: "development",
+  rank: null,
   ...o,
 });
 

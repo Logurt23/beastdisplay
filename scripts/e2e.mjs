@@ -110,8 +110,8 @@ async function main() {
     check(`warroom ${name}: no document scroll`, await noScroll(page));
     check(`warroom ${name}: fixture banner shown`, await page.getByText("Fixture data, not live").isVisible());
     check(`warroom ${name}: Chicago clock running`, /\d{2}:\d{2}:\d{2}/.test(await page.getByLabel("Clock").innerText()));
-    const titleSize = await page.evaluate(() => parseFloat(getComputedStyle(document.querySelector('[class*="projectTitle"]')).fontSize));
-    const expected = name === "4k" ? 52 : 26;
+    const titleSize = await page.evaluate(() => parseFloat(getComputedStyle(document.querySelector('[class*="laneTitle"]')).fontSize));
+    const expected = name === "4k" ? 44 : 22;
     check(`warroom ${name}: project title ${expected}px`, Math.abs(titleSize - expected) < 0.6, `${titleSize}px`);
     const unexpectedHosts = [...hosts].filter((h) => h !== "127.0.0.1:4173" && h !== "127.0.0.1:8787");
     check(`warroom ${name}: no third-party requests`, unexpectedHosts.length === 0, unexpectedHosts.join(", "));
@@ -135,7 +135,7 @@ async function main() {
     await page.getByText("Live", { exact: true }).waitFor({ timeout: 10_000 });
     await context.setOffline(true);
     await page.getByText("Offline", { exact: true }).waitFor({ timeout: 10_000 });
-    const stillThere = await page.getByLabel("Projects").isVisible();
+    const stillThere = await page.getByLabel("Pulse").isVisible();
     await page.screenshot({ path: `${OUT}/offline-1080p.png` });
     check("network pull: badge offline, board stays on screen", stillThere);
     await context.setOffline(false);
@@ -153,11 +153,11 @@ async function main() {
     await mode("drop");
     await page.getByText("Nexus unreachable").waitFor({ timeout: 10_000 });
     await page.getByText("Offline", { exact: true }).waitFor({ timeout: 60_000 });
-    check("Nexus down: reason shown, offline after 4 failed polls, data kept", await page.getByLabel("Projects").isVisible());
+    check("Nexus down: reason shown, offline after 4 failed polls, data kept", await page.getByLabel("Pulse").isVisible());
 
     // Boot while Nexus is down: last good payload from localStorage paints with a stale or offline badge.
     await page.reload();
-    await page.getByLabel("Projects").waitFor({ timeout: 10_000 });
+    await page.getByLabel("Pulse").waitFor({ timeout: 10_000 });
     const badge = await page.getByRole("status").first().innerText();
     check("boot with Nexus down: last good payload painted", /Stale|Offline/i.test(badge), badge.replace(/\s+/g, " "));
     await page.screenshot({ path: `${OUT}/boot-nexus-down-1080p.png` });

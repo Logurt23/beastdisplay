@@ -11,12 +11,12 @@
   position: absolute;
   inset: 0;
   display: grid;
-  grid-template-columns: 60fr 40fr;
-  grid-template-rows: 38fr 34fr 28fr;
+  grid-template-columns: 33fr 26fr 41fr;
+  grid-template-rows: 44fr 26fr 30fr;
   grid-template-areas:
-    "pulse pulse"
-    "projects due"
-    "calendar goals";
+    "pulse pulse pulse"
+    "edits launch pending"
+    "calendar calendar goals";
   gap: calc(14 * var(--u));
 }
 .warroom > div {
@@ -25,10 +25,23 @@
   display: grid;
 }
 .areaPulse { grid-area: pulse; }
-.areaProjects { grid-area: projects; }
-.areaDue { grid-area: due; }
+.areaEdits { grid-area: edits; }
+.areaLaunch { grid-area: launch; }
+.areaPending { grid-area: pending; }
 .areaCalendar { grid-area: calendar; }
 .areaGoals { grid-area: goals; }
+
+.pulseLayout {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-rows: 58fr 42fr;
+  gap: calc(14 * var(--u));
+}
+.pulseLayout > * {
+  min-width: 0;
+  min-height: 0;
+}
 
 .split6040,
 .goalsLayout {
@@ -312,6 +325,248 @@
   padding-right: calc(40 * var(--u));
 }
 
+/* Pulse, whiteboard rework: tiles | lanes | due today */
+.pulseGrid {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 11fr 63fr 26fr;
+  gap: calc(14 * var(--u));
+}
+.pulseGrid > * {
+  min-width: 0;
+  min-height: 0;
+}
+.pulseTiles {
+  display: grid;
+  grid-auto-rows: minmax(0, 1fr);
+  gap: calc(12 * var(--u));
+}
+.pulseTiles .tileDelta {
+  font-size: calc(18 * var(--u));
+  white-space: nowrap;
+}
+
+/* Who's on what */
+.lanesWrap {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+.lanesHead,
+.dueTodayHead {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: calc(12 * var(--u));
+  margin-bottom: calc(8 * var(--u));
+  font-size: calc(18 * var(--u));
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.lanes {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: repeat(var(--lanes), minmax(0, 1fr));
+  gap: calc(10 * var(--u));
+}
+.lane {
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: calc(4 * var(--u));
+  padding: calc(8 * var(--u));
+  border: 1px solid var(--panel-border);
+  border-radius: calc(8 * var(--u));
+  background: rgba(255, 255, 255, 0.02);
+  overflow: hidden;
+}
+.laneHead {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: calc(10 * var(--u));
+  padding-bottom: calc(6 * var(--u));
+  border-bottom: calc(2 * var(--u)) solid var(--brand-primary, var(--cyan));
+}
+.laneInitials {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: calc(40 * var(--u));
+  height: calc(40 * var(--u));
+  border-radius: 50%;
+  background: var(--brand-primary, var(--cyan));
+  color: var(--brand-ink, #000);
+  font-size: calc(17 * var(--u));
+  font-weight: 700;
+}
+.laneName {
+  min-width: 0;
+  font-size: calc(24 * var(--u));
+  font-weight: 700;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.laneCount {
+  margin-left: auto;
+  font-size: calc(22 * var(--u));
+  font-weight: 600;
+  color: var(--muted);
+}
+.laneBody {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: calc(6 * var(--u));
+  overflow: hidden;
+}
+.laneMore {
+  flex: none;
+  height: calc(20 * var(--u));
+  font-size: calc(16 * var(--u));
+  color: var(--muted);
+  text-align: right;
+}
+.laneSub {
+  display: flex;
+  align-items: baseline;
+  gap: calc(8 * var(--u));
+  min-width: 0;
+}
+.laneSub .laneClient {
+  flex: 1;
+}
+.laneCard {
+  --due: var(--due-none);
+  flex: none;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: calc(10 * var(--u));
+  height: calc(56 * var(--u));
+  padding: calc(4 * var(--u)) calc(8 * var(--u));
+  border-left: calc(3 * var(--u)) solid transparent;
+  border-radius: calc(6 * var(--u));
+  background: rgba(255, 255, 255, 0.03);
+}
+.laneRank {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: calc(28 * var(--u));
+  height: calc(28 * var(--u));
+  border-radius: 50%;
+  border: calc(2 * var(--u)) solid var(--brand-primary, var(--cyan));
+  color: var(--brand-primary, var(--cyan));
+  font-size: calc(16 * var(--u));
+  font-weight: 700;
+}
+.laneText {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  line-height: 1.15;
+}
+.laneTitle {
+  font-size: calc(22 * var(--u));
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.laneClient {
+  font-size: calc(16 * var(--u));
+  color: var(--muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.laneDue {
+  flex: none;
+  font-size: calc(17 * var(--u));
+  font-weight: 600;
+  color: var(--due);
+  white-space: nowrap;
+}
+.lanesEmpty,
+.dueTodayEmpty {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(22 * var(--u));
+  color: var(--muted);
+}
+
+/* Due today */
+.dueToday {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  padding: calc(8 * var(--u)) calc(12 * var(--u));
+  border: 1px solid var(--due-today, var(--amber));
+  border-radius: calc(8 * var(--u));
+  background: rgba(255, 255, 255, 0.02);
+  overflow: hidden;
+}
+.dueTodayHead {
+  color: var(--due-today, var(--amber));
+}
+.dueTodayCount {
+  margin-left: auto;
+  font-size: calc(28 * var(--u));
+  font-weight: 700;
+}
+.dueTodayRow {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: calc(10 * var(--u));
+  min-height: calc(56 * var(--u));
+  border-left: calc(3 * var(--u)) solid transparent;
+  padding-left: calc(6 * var(--u));
+  border-bottom: 1px solid var(--panel-border);
+}
+.dueTodayOverdue {
+  margin-top: auto;
+  padding-top: calc(6 * var(--u));
+  font-size: calc(20 * var(--u));
+  font-weight: 600;
+  color: var(--due-overdue, var(--hot));
+}
+
+/* Whiteboard stage panels: Edits, Push live, Pending */
+.stageGrid {
+  display: grid;
+  grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+  column-gap: calc(18 * var(--u));
+}
+.stageRow {
+  --due: var(--due-none);
+  min-width: 0;
+  height: calc(46 * var(--u));
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: calc(10 * var(--u));
+  border-left: calc(3 * var(--u)) solid transparent;
+  padding-left: calc(6 * var(--u));
+  border-bottom: 1px solid var(--panel-border);
+}
+.stageRow .initials {
+  width: calc(32 * var(--u));
+  height: calc(32 * var(--u));
+  font-size: calc(14 * var(--u));
+}
+
 /* Projects */
 .list {
   flex: 1;
@@ -476,6 +731,16 @@
 .more {
   font-size: calc(18 * var(--u));
   color: var(--muted);
+}
+.dayFoot {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: calc(6 * var(--u));
+}
+.dayFoot:empty {
+  display: none;
 }
 .dueBadge {
   --due: var(--due-none);

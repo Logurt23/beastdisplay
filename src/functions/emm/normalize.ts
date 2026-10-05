@@ -9,6 +9,7 @@ import type {
   ProjectStatus,
   PulseTile,
   SourceStatus,
+  Stage,
   TickerItem,
   Tone,
 } from "./types";
@@ -22,6 +23,15 @@ import type {
 const STATUSES: readonly ProjectStatus[] = ["queued", "active", "waiting", "review", "blocked", "done"];
 const PRIORITIES: readonly Priority[] = ["low", "normal", "high", "rush"];
 const TONES: readonly Tone[] = ["up", "down", "flat"];
+const STAGES: readonly Stage[] = ["development", "edits", "launch", "pending"];
+
+/** Stage when Nexus sends none: waiting reads as pending, review as edits, the rest as development. */
+export function deriveStage(status: Project["status"]): Stage {
+  if (status === "waiting") return "pending";
+  if (status === "review") return "edits";
+  return "development";
+}
+
 const SOURCE_STATUSES: readonly SourceStatus[] = ["live", "unconfigured", "error"];
 
 type Obj = Record<string, unknown>;
@@ -88,6 +98,8 @@ function project(v: unknown): Project | null {
   if (!id) return null;
   const known = STATUSES.includes(v.status as ProjectStatus);
   const dueOn = parseYmd(v.dueOn) ? (v.dueOn as string) : null;
+  const status = known ? (v.status as ProjectStatus) : "unknown";
+  const rank = typeof v.rank === "number" && Number.isInteger(v.rank) && v.rank > 0 ? v.rank : null;
   return {
     id,
     name: s(v.name) ?? "Untitled",
@@ -98,6 +110,8 @@ function project(v: unknown): Project | null {
     assignee: assignee(v.assignee),
     dueOn,
     lobbySafe: v.lobbySafe === true,
+    stage: STAGES.includes(v.stage as Stage) ? (v.stage as Stage) : deriveStage(status),
+    rank,
   };
 }
 

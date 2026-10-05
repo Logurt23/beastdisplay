@@ -37,7 +37,7 @@ describe("normalizeBoard (contract reading rules)", () => {
       pulse: { tiles: [{ id: "t", value: 3, tone: "sideways" }] },
     });
     expect(b.projects).toEqual([
-      { id: "a", name: "A2", client: null, status: "active", priority: "normal", assignee: null, dueOn: null, lobbySafe: false },
+      { id: "a", name: "A2", client: null, status: "active", priority: "normal", assignee: null, dueOn: null, lobbySafe: false, stage: "development", rank: null },
     ]);
     const c = normalizeBoard({ projects: [{ id: "x", status: "on-hold" }] });
     expect(c.projects[0]).toMatchObject({ status: "unknown", rawStatus: "on-hold" });

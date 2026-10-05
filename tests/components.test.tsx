@@ -117,6 +117,18 @@ describe("Warroom layout", () => {
   it("renders every panel from the fixture", () => {
     const Warroom = LAYOUTS.warroom;
     render(<Warroom board={A} today={today} lobbyMode={false} reduced={false} />);
-    for (const label of ["Pulse", "Projects", "Due", "This week", "Goals"]) expect(screen.getByLabelText(label)).toBeTruthy();
+    for (const label of ["Pulse", "Edits", "Push live", "Pending", "This week", "Goals", "Due today", "Who's on what"])
+      expect(screen.getByLabelText(label)).toBeTruthy();
+  });
+
+  it("shows each person's numbered queue and what is due today", () => {
+    const Warroom = LAYOUTS.warroom;
+    const { container } = render(<Warroom board={A} today={today} lobbyMode={false} reduced={false} />);
+    const lanes = container.querySelectorAll("[data-lane]");
+    expect(lanes.length).toBeGreaterThan(0);
+    expect(lanes.length).toBeLessThanOrEqual(4);
+    const due = screen.getByLabelText("Due today");
+    expect(due.textContent).toContain("Due today");
+    expect(due.textContent).not.toContain("Nothing due today");
   });
 });

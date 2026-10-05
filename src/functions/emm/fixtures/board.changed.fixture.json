@@ -78,7 +78,9 @@
         "initials": "AF"
       },
       "dueOn": "2026-10-07",
-      "lobbySafe": true
+      "lobbySafe": true,
+      "stage": "development",
+      "rank": 3
     },
     {
       "id": "prj_f2",
@@ -92,7 +94,9 @@
         "initials": "JF"
       },
       "dueOn": "2026-10-01",
-      "lobbySafe": false
+      "lobbySafe": false,
+      "stage": "development",
+      "rank": 1
     },
     {
       "id": "prj_f3",
@@ -106,7 +110,9 @@
         "initials": "RF"
       },
       "dueOn": "2026-10-03",
-      "lobbySafe": false
+      "lobbySafe": false,
+      "stage": "pending",
+      "rank": null
     },
     {
       "id": "prj_f4",
@@ -120,7 +126,9 @@
         "initials": "SF"
       },
       "dueOn": "2026-10-04",
-      "lobbySafe": true
+      "lobbySafe": true,
+      "stage": "edits",
+      "rank": null
     },
     {
       "id": "prj_f5",
@@ -134,7 +142,9 @@
         "initials": "AF"
       },
       "dueOn": "2026-10-06",
-      "lobbySafe": false
+      "lobbySafe": false,
+      "stage": "development",
+      "rank": 2
     },
     {
       "id": "prj_f6",
@@ -148,7 +158,9 @@
         "initials": "JF"
       },
       "dueOn": null,
-      "lobbySafe": false
+      "lobbySafe": false,
+      "stage": "development",
+      "rank": 3
     },
     {
       "id": "prj_f7",
@@ -162,7 +174,9 @@
         "initials": "RF"
       },
       "dueOn": "2026-10-13",
-      "lobbySafe": true
+      "lobbySafe": true,
+      "stage": "launch",
+      "rank": null
     },
     {
       "id": "prj_f8",
@@ -176,7 +190,9 @@
         "initials": "SF"
       },
       "dueOn": "2026-09-28",
-      "lobbySafe": false
+      "lobbySafe": false,
+      "stage": "development",
+      "rank": null
     },
     {
       "id": "prj_f9",
@@ -190,7 +206,9 @@
         "initials": "AF"
       },
       "dueOn": "2026-10-05",
-      "lobbySafe": false
+      "lobbySafe": false,
+      "stage": "development",
+      "rank": 1
     },
     {
       "id": "prj_f10",
@@ -204,7 +222,9 @@
         "initials": "JF"
       },
       "dueOn": "2026-10-18",
-      "lobbySafe": true
+      "lobbySafe": true,
+      "stage": "pending",
+      "rank": null
     },
     {
       "id": "prj_f11",
@@ -218,7 +238,9 @@
         "initials": "RF"
       },
       "dueOn": "2026-10-03",
-      "lobbySafe": false
+      "lobbySafe": false,
+      "stage": "edits",
+      "rank": null
     },
     {
       "id": "prj_f12",
@@ -228,7 +250,9 @@
       "priority": "normal",
       "assignee": null,
       "dueOn": "2026-10-10",
-      "lobbySafe": false
+      "lobbySafe": false,
+      "stage": "development",
+      "rank": null
     },
     {
       "id": "prj_f13",
@@ -242,7 +266,9 @@
         "initials": "AF"
       },
       "dueOn": "2026-11-02",
-      "lobbySafe": true
+      "lobbySafe": true,
+      "stage": "development",
+      "rank": 4
     },
     {
       "id": "prj_f14",
@@ -256,7 +282,9 @@
         "initials": "JF"
       },
       "dueOn": "2026-10-02",
-      "lobbySafe": false
+      "lobbySafe": false,
+      "stage": "development",
+      "rank": 2
     },
     {
       "id": "prj_f15",
@@ -270,7 +298,9 @@
         "initials": "RF"
       },
       "dueOn": "2026-10-09",
-      "lobbySafe": false
+      "lobbySafe": false,
+      "stage": "development",
+      "rank": 1
     },
     {
       "id": "prj_f16",
@@ -284,7 +314,9 @@
         "initials": "SF"
       },
       "dueOn": "2026-10-16",
-      "lobbySafe": true
+      "lobbySafe": true,
+      "stage": "development",
+      "rank": 1
     },
     {
       "id": "prj_f17",
@@ -298,7 +330,9 @@
         "initials": "AF"
       },
       "dueOn": "2026-09-24",
-      "lobbySafe": false
+      "lobbySafe": false,
+      "stage": "development",
+      "rank": null
     },
     {
       "id": "prj_f18",
@@ -312,7 +346,9 @@
         "initials": "JF"
       },
       "dueOn": null,
-      "lobbySafe": false
+      "lobbySafe": false,
+      "stage": "pending",
+      "rank": null
     },
     {
       "id": "prj_f19",
@@ -326,7 +362,9 @@
         "initials": "RF"
       },
       "dueOn": "2026-10-06",
-      "lobbySafe": true
+      "lobbySafe": true,
+      "stage": "launch",
+      "rank": null
     },
     {
       "id": "prj_f20",
@@ -340,7 +378,9 @@
         "initials": "SF"
       },
       "dueOn": "2026-10-24",
-      "lobbySafe": false
+      "lobbySafe": false,
+      "stage": "edits",
+      "rank": null
     }
   ],
   "events": [

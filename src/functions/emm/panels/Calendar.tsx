@@ -30,13 +30,15 @@ export function CalendarPanel({ board, today, lobbyMode }: { board: Board; today
                     </div>
                   ))
                 )}
+              </div>
+              <div className={styles.dayFoot}>
+                {d.dueCount > 0 && d.dueWorst ? (
+                  <div className={styles.dueBadge} style={{ "--due": `var(--due-${d.dueWorst})` } as CSSProperties} data-due={d.dueWorst}>
+                    <span className="num">{d.dueCount}</span> due
+                  </div>
+                ) : null}
                 {!lobbyMode && extra > 0 ? <div className={styles.more}>+{extra}</div> : null}
               </div>
-              {d.dueCount > 0 && d.dueWorst ? (
-                <div className={styles.dueBadge} style={{ "--due": `var(--due-${d.dueWorst})` } as CSSProperties} data-due={d.dueWorst}>
-                  <span className="num">{d.dueCount}</span> due
-                </div>
-              ) : null}
             </div>
           );
         })}

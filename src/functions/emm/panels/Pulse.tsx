@@ -6,6 +6,8 @@ import type { Board, PulseTile } from "../types";
 import styles from "../styles/emm.module.css";
 import { STATUS_COLOR, STATUS_WORD } from "./labels";
 import { Panel } from "./Panel";
+import { DueToday } from "./DueToday";
+import { Lanes } from "./Lanes";
 import { Ticker } from "./Ticker";
 
 const TONE_COLOR: Record<PulseTile["tone"], string> = {
@@ -18,30 +20,48 @@ const TONE_GLYPH: Record<PulseTile["tone"], string> = { up: "▲", down: "▼", 
 
 const BUCKET_WORD = { overdue: "Overdue", today: "Today", soon: "Soon", scheduled: "Sched.", later: "Later", none: "None", done: "Done" } as const;
 
-/** Section 6A plus the current Nexus-derived stats (4 to 6). Tone comes from `tone` only. */
+/**
+ * Section 6A, reworked 2026-10-05 from the office whiteboard: Mothership tiles
+ * on the left, who's on what (one lane per person) in the middle, due today on
+ * the right, ticker underneath. Tone comes from `tone` only.
+ */
 export function PulsePanel({ board, today, lobbyMode, reduced }: { board: Board; today: string; lobbyMode: boolean; reduced: boolean }) {
   const { shown } = filterTiles(board.pulse.tiles);
   const status = board.pulse.sourceStatus;
   const connected = status === "live" && shown.length > 0;
+
+  return (
+    <Panel title="Pulse" className={styles.pulse}>
+      <div className={styles.pulseGrid}>
+        <div className={styles.pulseTiles}>
+          {connected ? (
+            shown.map((t) => <Tile key={t.id} tile={t} />)
+          ) : (
+            <div className={`${styles.tile} ${styles.tileEmpty}`}>
+              <div className={styles.tileEmptyTitle}>{status === "error" ? "Mothership error" : "Mothership not connected"}</div>
+              <div className={styles.tileEmptyDetail}>
+                {status === "error" ? "Nexus could not reach Mothership." : "Pulse not configured in Nexus. No numbers rather than zeros."}
+              </div>
+            </div>
+          )}
+        </div>
+        <Lanes projects={board.projects} today={today} lobbyMode={lobbyMode} />
+        <DueToday projects={board.projects} today={today} lobbyMode={lobbyMode} />
+      </div>
+      {lobbyMode ? null : <Ticker items={board.pulse.ticker} reduced={reduced} />}
+    </Panel>
+  );
+}
+
+/** Current stats 4 to 6 as tiles (projects by status, due buckets, open per person). Used on the pulse layout. */
+export function StatsStrip({ board, today }: { board: Board; today: string }) {
   const byStatus = projectsByStatus(board.projects);
   const buckets = dueBuckets(board.projects, today);
   const load = assigneeLoad(board.projects).slice(0, 6);
   const maxLoad = Math.max(1, ...load.map((r) => r.open));
-
   return (
-    <Panel title="Pulse" className={styles.pulse}>
+    <Panel title="Board stats">
       <div className={styles.tiles}>
-        {connected ? (
-          shown.map((t) => <Tile key={t.id} tile={t} />)
-        ) : (
-          <div className={`${styles.tile} ${styles.tileWide} ${styles.tileEmpty}`}>
-            <div className={styles.tileEmptyTitle}>{status === "error" ? "Mothership error" : "Mothership not connected"}</div>
-            <div className={styles.tileEmptyDetail}>
-              {status === "error" ? "Nexus could not reach Mothership. Numbers resume when it does." : "Pulse not configured in Nexus. No numbers are shown rather than zeros."}
-            </div>
-          </div>
-        )}
-
         <div className={`${styles.tile} ${styles.tileWide}`} data-stat="projects_by_status">
           <div className={styles.tileLabel}>Projects by status</div>
           <div className={styles.miniGrid}>
@@ -50,7 +70,6 @@ export function PulsePanel({ board, today, lobbyMode, reduced }: { board: Board;
             ))}
           </div>
         </div>
-
         <div className={`${styles.tile} ${styles.tileWide}`} data-stat="due_buckets">
           <div className={styles.tileLabel}>Due</div>
           <div className={styles.miniGrid}>
@@ -59,7 +78,6 @@ export function PulsePanel({ board, today, lobbyMode, reduced }: { board: Board;
             ))}
           </div>
         </div>
-
         <div className={`${styles.tile} ${styles.tileWide}`} data-stat="assignee_load">
           <div className={styles.tileLabel}>Open per person</div>
           {load.length === 0 ? (
@@ -79,7 +97,6 @@ export function PulsePanel({ board, today, lobbyMode, reduced }: { board: Board;
           )}
         </div>
       </div>
-      {lobbyMode ? null : <Ticker items={board.pulse.ticker} reduced={reduced} />}
     </Panel>
   );
 }

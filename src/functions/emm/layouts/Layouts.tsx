@@ -5,7 +5,8 @@ import { GoalsPanel } from "../panels/Goals";
 import { ErrorBoundary } from "../../../core/ErrorBoundary";
 import { Empty } from "../panels/Panel";
 import { ProjectsPanel } from "../panels/Projects";
-import { PulsePanel } from "../panels/Pulse";
+import { PulsePanel, StatsStrip } from "../panels/Pulse";
+import { StagePanel } from "../panels/Stage";
 import type { EmmLayout } from "../meta";
 import type { ReactNode } from "react";
 import styles from "../styles/emm.module.css";
@@ -26,13 +27,19 @@ function Guard({ board, children }: { board: Board; children: ReactNode }) {
   );
 }
 
-/** Section 9 grid at 1080p: pulse top 38%; projects 60% / due 40%; calendar and goals share the bottom 28%. */
+/**
+ * War room, reworked 2026-10-05 to match the office whiteboard:
+ * Pulse (who's on what + due today) on top; Edits, Push live and Pending in the
+ * middle; calendar and goals along the bottom.
+ */
 function Warroom(p: LayoutProps) {
+  const common = { projects: p.board.projects, today: p.today, lobbyMode: p.lobbyMode };
   return (
     <div className={styles.warroom}>
       <div className={styles.areaPulse}><Guard board={p.board}><PulsePanel {...p} /></Guard></div>
-      <div className={styles.areaProjects}><Guard board={p.board}><ProjectsPanel projects={p.board.projects} today={p.today} lobbyMode={p.lobbyMode} /></Guard></div>
-      <div className={styles.areaDue}><Guard board={p.board}><DueRail projects={p.board.projects} today={p.today} /></Guard></div>
+      <div className={styles.areaEdits}><Guard board={p.board}><StagePanel stage="edits" {...common} /></Guard></div>
+      <div className={styles.areaLaunch}><Guard board={p.board}><StagePanel stage="launch" {...common} offsetMs={3_000} /></Guard></div>
+      <div className={styles.areaPending}><Guard board={p.board}><StagePanel stage="pending" columns={2} {...common} offsetMs={6_000} /></Guard></div>
       <div className={styles.areaCalendar}><Guard board={p.board}><CalendarPanel board={p.board} today={p.today} lobbyMode={p.lobbyMode} /></Guard></div>
       <div className={styles.areaGoals}><Guard board={p.board}><GoalsPanel goals={p.board.goals} reduced={p.reduced} perPage={2} /></Guard></div>
     </div>
@@ -50,8 +57,9 @@ function ProjectsLayout(p: LayoutProps) {
 
 function PulseLayout(p: LayoutProps) {
   return (
-    <div className={styles.single}>
+    <div className={styles.pulseLayout}>
       <Guard board={p.board}><PulsePanel {...p} /></Guard>
+      <Guard board={p.board}><StatsStrip board={p.board} today={p.today} /></Guard>
     </div>
   );
 }

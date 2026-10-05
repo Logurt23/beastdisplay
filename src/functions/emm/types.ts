@@ -7,6 +7,11 @@ export type ProjectStatus = "queued" | "active" | "waiting" | "review" | "blocke
 export type Priority = "low" | "normal" | "high" | "rush";
 export type Tone = "up" | "down" | "flat";
 export type SourceStatus = "live" | "unconfigured" | "error";
+/**
+ * Whiteboard section (added 2026-10-05 from the office whiteboard). Optional on
+ * the wire; when Nexus leaves it out the display derives it from status.
+ */
+export type Stage = "development" | "edits" | "launch" | "pending";
 
 export interface PulseTile {
   id: string;
@@ -44,6 +49,10 @@ export interface Project {
   /** YYYY-MM-DD, or null for none. A date, not an instant. */
   dueOn: string | null;
   lobbySafe: boolean;
+  /** Whiteboard section. From Nexus `stage`, or derived from status. */
+  stage: Stage;
+  /** Order in the assignee's queue (1 = next up), from Nexus `rank`. Null if unranked. */
+  rank: number | null;
 }
 
 export interface CalendarEvent {

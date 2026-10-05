@@ -44,7 +44,7 @@ const display = createDisplayHandler({
 ## What still needs Nexus access
 
 1. Check whether Nexus already exposes `/api/display/*` (Phase 4 says build only if it does not).
-2. Write the three record queries above against real Nexus tables, mapping names to section 7 without renaming live records. Decide how long `done` projects stay in the payload (open question).
+2. Write the three record queries above against real Nexus tables, mapping names to section 7 without renaming live records. Decide how long `done` projects stay in the payload (open question). Send each project's whiteboard `stage` and `rank` if Nexus can track them (see `docs/functions/emm.md`, approved contract addition); without them the display derives the section from `status` and Push Live stays empty.
 3. Wire Mothership into `fetchPulse` once its API and credentials are known. Nexus computes `leads_today`, its `delta`, `deltaLabel` and `tone`.
 4. Set `DISPLAY_TOKENS` in the Nexus environment and the same token in the display host's `config.js`.
 5. Run the checks: `curl` with the token is 200, without it 401, preflight returns the allow headers, 20 quick requests give ten 429s.

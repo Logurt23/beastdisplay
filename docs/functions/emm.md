@@ -164,6 +164,11 @@ Rush adds a red edge. It does not replace the date color.
 
 `pulse.sourceStatus: "live" | "unconfigured" | "error"`, approved by Logan on 2026-10-03. It lets the board tell "Mothership not connected" from "zero leads". If Nexus omits it, the display reads empty `tiles` as `unconfigured`. No field from section 7 is renamed.
 
+Whiteboard fields on each project, added 2026-10-05 so the war room mirrors the office whiteboard (Logan said Nexus may add the fields it needs). Both are optional; nothing existing is renamed.
+
+- `stage: "development" | "edits" | "launch" | "pending"` is the whiteboard section: New Development, Edits, Push Live, Pending. If Nexus omits it or sends something else, the display derives it from `status`: `waiting` is pending, `review` is edits, everything else is development. Push Live has no status equivalent, so it stays empty until Nexus sends `stage`.
+- `rank: number | null` is the person's queue number on the whiteboard (1 is next). Only positive integers are kept. Unranked work sorts after ranked work, then by the Projects sort.
+
 ## Contract reading rules (`normalize.ts`)
 
 - Absent or `null` arrays read as `[]`. A record with no `id` is dropped (it cannot be keyed); duplicate ids keep the last one.
@@ -202,7 +207,7 @@ Stats 4 to 6 are counted on the display from the `projects` Nexus sends, so they
 
 ## Module rules
 
-**Layouts.** `warroom` at 1080p: pulse top 38%; projects left 60% and due rail right 40% in the middle 34%; calendar 60% and goals 40% in the bottom 28%. `projects`: projects and due rail full height. `pulse`: pulse alone. `goals`: goals over calendar. Each panel has its own error boundary, so one bad panel never blanks the board.
+**Layouts.** `warroom` at 1080p (whiteboard version, 2026-10-05): Pulse across the top 44%, holding the leads tile, "New development" as one lane per person with their numbered queue (4 lanes per page, rotating), and "Due today" with an overdue count, ticker underneath; Edits, Push live and Pending side by side in the middle 26%; calendar and goals in the bottom 30%. The projects-by-status, due-bucket and open-per-person tiles live on the `pulse` layout as "Board stats". `projects`: projects and due rail full height. `pulse`: pulse over board stats. `goals`: goals over calendar. Each panel has its own error boundary, so one bad panel never blanks the board.
 
 **Pulse.** Mothership tiles keyed by id; a tile animates (180 to 400 ms) only when its `value` changed. Tone color comes from `tone` only, never the sign of `delta`. `sourceStatus` `unconfigured` shows "Mothership not connected" and `error` shows "Mothership error", never zeros. Values use condensed tabular figures (96 px at 1080p).
 
