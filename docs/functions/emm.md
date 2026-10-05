@@ -168,6 +168,7 @@ Whiteboard fields on each project, added 2026-10-05 so the war room mirrors the 
 
 - `stage: "development" | "edits" | "launch" | "pending"` is the whiteboard section: New Development, Edits, Push Live, Pending. If Nexus omits it or sends something else, the display derives it from `status`: `waiting` is pending, `review` is edits, everything else is development. Push Live has no status equivalent, so it stays empty until Nexus sends `stage`.
 - `rank: number | null` is the person's queue number on the whiteboard (1 is next). Only positive integers are kept. Unranked work sorts after ranked work, then by the Projects sort.
+- `events[].people: Assignee[]` (same shape as a project's `assignee`), added 2026-10-05 for Team today. It lists who the event is for. Empty or missing means the whole team.
 
 ## Contract reading rules (`normalize.ts`)
 
@@ -207,7 +208,7 @@ Stats 4 to 6 are counted on the display from the `projects` Nexus sends, so they
 
 ## Module rules
 
-**Layouts.** `warroom` at 1080p (whiteboard version, 2026-10-05): Pulse across the top 44%, holding the leads tile, "New development" as one lane per person with their numbered queue (4 lanes per page, rotating), and "Due today" with an overdue count, ticker underneath; Edits, Push live and Pending side by side in the middle 26%; calendar and goals in the bottom 30%. The projects-by-status, due-bucket and open-per-person tiles live on the `pulse` layout as "Board stats". `projects`: projects and due rail full height. `pulse`: pulse over board stats. `goals`: goals over calendar. Each panel has its own error boundary, so one bad panel never blanks the board.
+**Layouts.** `warroom` at 1080p (whiteboard version, 2026-10-05): Pulse across the top 45% holds three things. "Projects today" is open work not in Pending, counted from the board, with how many are due today. "New development" has one lane per person with their numbered queue, 4 lanes per page, rotating. "Due today" has an overdue count. The ticker runs underneath. Edits, Push live and Pending sit side by side in the middle 21% as one-line rows. Team today and goals share the bottom 34%. Team today has one card per person: their next calendar event (one they are in, or a whole-team one), then their tasks, ordered due today or overdue first, then Push live, Edits, their development queue and Pending. The week calendar moved to the `goals` layout. The `pulse` layout carries the Mothership tiles (leads today), projects by status, due buckets and open per person as "Board stats". `projects`: projects and due rail full height. `pulse`: pulse over board stats. `goals`: goals over calendar. Each panel has its own error boundary, so one bad panel never blanks the board.
 
 **Pulse.** Mothership tiles keyed by id; a tile animates (180 to 400 ms) only when its `value` changed. Tone color comes from `tone` only, never the sign of `delta`. `sourceStatus` `unconfigured` shows "Mothership not connected" and `error` shows "Mothership error", never zeros. Values use condensed tabular figures (96 px at 1080p).
 

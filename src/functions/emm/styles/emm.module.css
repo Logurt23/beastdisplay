@@ -12,11 +12,11 @@
   inset: 0;
   display: grid;
   grid-template-columns: 33fr 26fr 41fr;
-  grid-template-rows: 44fr 26fr 30fr;
+  grid-template-rows: 45fr 21fr 34fr;
   grid-template-areas:
     "pulse pulse pulse"
     "edits launch pending"
-    "calendar calendar goals";
+    "team team goals";
   gap: calc(14 * var(--u));
 }
 .warroom > div {
@@ -28,7 +28,7 @@
 .areaEdits { grid-area: edits; }
 .areaLaunch { grid-area: launch; }
 .areaPending { grid-area: pending; }
-.areaCalendar { grid-area: calendar; }
+.areaTeam { grid-area: team; }
 .areaGoals { grid-area: goals; }
 
 .pulseLayout {
@@ -552,7 +552,7 @@
 .stageRow {
   --due: var(--due-none);
   min-width: 0;
-  height: calc(46 * var(--u));
+  height: calc(36 * var(--u));
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
@@ -561,11 +561,122 @@
   padding-left: calc(6 * var(--u));
   border-bottom: 1px solid var(--panel-border);
 }
+.stageRow .laneText {
+  flex-direction: row;
+  align-items: baseline;
+  gap: calc(10 * var(--u));
+}
+.stageRow .laneTitle {
+  flex-shrink: 1;
+  min-width: 0;
+}
+.stageRow .laneClient {
+  flex-shrink: 2;
+  min-width: 0;
+}
 .stageRow .initials {
-  width: calc(32 * var(--u));
-  height: calc(32 * var(--u));
+  width: calc(30 * var(--u));
+  height: calc(30 * var(--u));
   font-size: calc(14 * var(--u));
 }
+
+/* Team today: one card per person */
+.team {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: repeat(var(--people), minmax(0, 1fr));
+  gap: calc(10 * var(--u));
+}
+.person {
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: calc(6 * var(--u));
+  padding: calc(8 * var(--u));
+  border: 1px solid var(--panel-border);
+  border-radius: calc(8 * var(--u));
+  background: rgba(255, 255, 255, 0.02);
+  overflow: hidden;
+}
+.personDue {
+  margin-left: auto;
+  font-size: calc(16 * var(--u));
+  font-weight: 700;
+  color: var(--due-today, var(--amber));
+  white-space: nowrap;
+}
+.personNext {
+  flex: none;
+  display: flex;
+  align-items: baseline;
+  gap: calc(8 * var(--u));
+  min-width: 0;
+  padding: calc(4 * var(--u)) calc(8 * var(--u));
+  border-left: calc(3 * var(--u)) solid var(--brand-primary, var(--cyan));
+  background: var(--brand-glow, rgba(255, 255, 255, 0.03));
+  border-radius: calc(4 * var(--u));
+}
+.personNextTime {
+  flex: none;
+  font-size: calc(18 * var(--u));
+  font-weight: 700;
+  color: var(--brand-primary, var(--cyan));
+}
+.personNext[data-now] .personNextTime {
+  color: var(--due-today, var(--amber));
+}
+.personNextTitle {
+  min-width: 0;
+  font-size: calc(18 * var(--u));
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.personNextNone {
+  font-size: calc(17 * var(--u));
+  color: var(--muted);
+}
+.personTasks {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: calc(4 * var(--u));
+  overflow: hidden;
+}
+.personTask {
+  --due: var(--due-none);
+  flex: none;
+  height: calc(32 * var(--u));
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: calc(8 * var(--u));
+  padding-left: calc(4 * var(--u));
+  border-left: calc(3 * var(--u)) solid transparent;
+}
+.personTask .laneTitle {
+  font-size: calc(20 * var(--u));
+}
+.personTask .laneDue {
+  font-size: calc(15 * var(--u));
+}
+.stageTag {
+  font-size: calc(13 * var(--u));
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: calc(1 * var(--u)) calc(6 * var(--u));
+  border-radius: calc(4 * var(--u));
+  border: 1px solid currentColor;
+  color: var(--brand-primary, var(--cyan));
+}
+.personTask[data-stage="edits"] .stageTag { color: var(--due-later); }
+.personTask[data-stage="launch"] .stageTag { color: var(--good); }
+.personTask[data-stage="pending"] .stageTag { color: var(--amber); }
 
 /* Projects */
 .list {

@@ -105,3 +105,13 @@ export function useChangedFlag(value: unknown, ms: number): boolean {
   }, [value, ms]);
   return changed;
 }
+
+/** Wall-clock ms, refreshed every `intervalMs`. For "what's next" views, not the clock. */
+export function useNow(intervalMs = 30_000): number {
+  const [now, setNow] = useState(() => Date.now());
+  useEffect(() => {
+    const id = setInterval(() => setNow(Date.now()), intervalMs);
+    return () => clearInterval(id);
+  }, [intervalMs]);
+  return now;
+}

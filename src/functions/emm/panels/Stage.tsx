@@ -14,7 +14,7 @@ export const STAGE_TITLE: Record<Stage, string> = {
   pending: "Pending",
 };
 
-const ROW_PX = 46;
+const ROW_PX = 36;
 
 /** One whiteboard section (Edits, Push Live, Pending) as a list with owner and due date. */
 export function StagePanel({

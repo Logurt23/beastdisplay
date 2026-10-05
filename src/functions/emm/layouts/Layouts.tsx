@@ -7,6 +7,7 @@ import { Empty } from "../panels/Panel";
 import { ProjectsPanel } from "../panels/Projects";
 import { PulsePanel, StatsStrip } from "../panels/Pulse";
 import { StagePanel } from "../panels/Stage";
+import { TeamTodayPanel } from "../panels/TeamToday";
 import type { EmmLayout } from "../meta";
 import type { ReactNode } from "react";
 import styles from "../styles/emm.module.css";
@@ -30,7 +31,8 @@ function Guard({ board, children }: { board: Board; children: ReactNode }) {
 /**
  * War room, reworked 2026-10-05 to match the office whiteboard:
  * Pulse (who's on what + due today) on top; Edits, Push live and Pending in the
- * middle; calendar and goals along the bottom.
+ * middle; Team today (each person's tasks and next event) and goals along the
+ * bottom. The week calendar is on the goals layout.
  */
 function Warroom(p: LayoutProps) {
   const common = { projects: p.board.projects, today: p.today, lobbyMode: p.lobbyMode };
@@ -40,7 +42,7 @@ function Warroom(p: LayoutProps) {
       <div className={styles.areaEdits}><Guard board={p.board}><StagePanel stage="edits" {...common} /></Guard></div>
       <div className={styles.areaLaunch}><Guard board={p.board}><StagePanel stage="launch" {...common} offsetMs={3_000} /></Guard></div>
       <div className={styles.areaPending}><Guard board={p.board}><StagePanel stage="pending" columns={2} {...common} offsetMs={6_000} /></Guard></div>
-      <div className={styles.areaCalendar}><Guard board={p.board}><CalendarPanel board={p.board} today={p.today} lobbyMode={p.lobbyMode} /></Guard></div>
+      <div className={styles.areaTeam}><Guard board={p.board}><TeamTodayPanel projects={p.board.projects} events={p.board.events} today={p.today} lobbyMode={p.lobbyMode} /></Guard></div>
       <div className={styles.areaGoals}><Guard board={p.board}><GoalsPanel goals={p.board.goals} reduced={p.reduced} perPage={2} /></Guard></div>
     </div>
   );

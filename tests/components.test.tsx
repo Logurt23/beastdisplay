@@ -8,7 +8,7 @@ import { LAYOUTS } from "../src/functions/emm/layouts/Layouts";
 import { normalizeBoard } from "../src/functions/emm/normalize";
 import { GoalsPanel } from "../src/functions/emm/panels/Goals";
 import { ProjectsPanel } from "../src/functions/emm/panels/Projects";
-import { PulsePanel } from "../src/functions/emm/panels/Pulse";
+import { PulsePanel, StatsStrip } from "../src/functions/emm/panels/Pulse";
 
 afterEach(cleanup);
 
@@ -43,19 +43,27 @@ describe("core boots without the EMM pack", () => {
 });
 
 describe("Pulse", () => {
-  it("animates only the tile whose value changed", () => {
-    const { container, rerender } = render(<PulsePanel board={A} today={today} lobbyMode={false} reduced={false} />);
+  it("shows Projects today from the board, not Mothership leads", () => {
+    render(<PulsePanel board={A} today={today} lobbyMode={false} reduced={false} />);
+    expect(screen.getByText("Projects today")).toBeTruthy();
+    expect(screen.queryByText("Leads today")).toBeNull();
+  });
+
+  it("animates only the Mothership tile whose value changed", () => {
+    const { container, rerender } = render(<StatsStrip board={A} today={today} />);
     expect(container.querySelectorAll("[class*=bump]")).toHaveLength(0);
-    rerender(<PulsePanel board={B} today={today} lobbyMode={false} reduced={false} />);
+    rerender(<StatsStrip board={B} today={today} />);
     const bumped = [...container.querySelectorAll("[class*=bump]")].map((el) => el.getAttribute("data-stat"));
     expect(bumped).toEqual(["leads_today"]);
   });
 
   it("shows 'Mothership not connected', never zeros, when unconfigured", () => {
     const board = normalizeBoard({ ...fixture, pulse: { tiles: [], ticker: [], sourceStatus: "unconfigured" } });
-    const { container } = render(<PulsePanel board={board} today={today} lobbyMode={false} reduced={false} />);
+    const { container } = render(<StatsStrip board={board} today={today} />);
     expect(screen.getByText("Mothership not connected")).toBeTruthy();
     expect(container.querySelector('[data-stat="leads_today"]')).toBeNull();
+    cleanup();
+    render(<PulsePanel board={board} today={today} lobbyMode={false} reduced={false} />);
     expect(screen.queryByLabelText("Recent events")).toBeNull();
   });
 
@@ -64,7 +72,7 @@ describe("Pulse", () => {
       ...fixture,
       pulse: { ...fixture.pulse, tiles: [...fixture.pulse.tiles, { id: "calls_today", label: "Calls today", value: 9, display: "9", tone: "up" }] },
     });
-    render(<PulsePanel board={board} today={today} lobbyMode={false} reduced={false} />);
+    render(<StatsStrip board={board} today={today} />);
     expect(screen.queryByText("Calls today")).toBeNull();
     expect(screen.getByText("Leads today")).toBeTruthy();
   });
@@ -117,7 +125,7 @@ describe("Warroom layout", () => {
   it("renders every panel from the fixture", () => {
     const Warroom = LAYOUTS.warroom;
     render(<Warroom board={A} today={today} lobbyMode={false} reduced={false} />);
-    for (const label of ["Pulse", "Edits", "Push live", "Pending", "This week", "Goals", "Due today", "Who's on what"])
+    for (const label of ["Pulse", "Edits", "Push live", "Pending", "Team today", "Goals", "Due today", "Who's on what"])
       expect(screen.getByLabelText(label)).toBeTruthy();
   });
 

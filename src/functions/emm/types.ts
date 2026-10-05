@@ -61,6 +61,11 @@ export interface CalendarEvent {
   startsAt: string;
   endsAt: string | null;
   kind: string | null;
+  /**
+   * Who the event is for (added 2026-10-05 for the Team today view). Empty
+   * means the whole team. Optional on the wire.
+   */
+  people: Assignee[];
 }
 
 export interface Goal {

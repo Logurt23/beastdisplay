@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { developmentLanes, dueToday, inStage } from "../src/functions/emm/board";
+import { developmentLanes, dueToday, inStage, projectsToday, teamToday } from "../src/functions/emm/board";
 import { deriveStage } from "../src/functions/emm/normalize";
 import type { Assignee, Project } from "../src/functions/emm/types";
 
@@ -67,5 +67,63 @@ describe("deriveStage", () => {
     expect(deriveStage("review")).toBe("edits");
     expect(deriveStage("active")).toBe("development");
     expect(deriveStage("queued")).toBe("development");
+  });
+});
+
+describe("projectsToday", () => {
+  it("counts open work not in Pending, and how much is due today", () => {
+    const r = projectsToday(
+      [p("a", { dueOn: "2026-10-05" }), p("b", { stage: "edits" }), p("c", { stage: "pending", dueOn: "2026-10-05" }), p("d", { status: "done" })],
+      "2026-10-05",
+    );
+    expect(r).toEqual({ count: 2, dueToday: 1 });
+  });
+});
+
+describe("teamToday", () => {
+  const now = Date.parse("2026-10-05T15:00:00Z"); // 10:00 Chicago
+  const ev = (id: string, startsAt: string, people: Assignee[], endsAt: string | null = null) => ({ id, title: id, startsAt, endsAt, kind: null, people });
+
+  it("orders each person's tasks: due today first, then live, edits, queue by rank, pending", () => {
+    const [amyDay] = teamToday(
+      [
+        p("dev2", { assignee: amy, rank: 2 }),
+        p("pend", { assignee: amy, stage: "pending" }),
+        p("dev1", { assignee: amy, rank: 1 }),
+        p("edit", { assignee: amy, stage: "edits" }),
+        p("live", { assignee: amy, stage: "launch" }),
+        p("due", { assignee: amy, rank: 3, dueOn: "2026-10-05" }),
+        p("done", { assignee: amy, status: "done" }),
+      ],
+      [],
+      "2026-10-05",
+      now,
+    );
+    expect(amyDay.tasks.map((x) => x.id)).toEqual(["due", "live", "edit", "dev1", "dev2", "pend"]);
+    expect(amyDay.next).toBeNull();
+  });
+
+  it("picks each person's next event, counting whole-team events and ones in progress", () => {
+    const days = teamToday(
+      [p("a", { assignee: amy }), p("b", { assignee: bo })],
+      [
+        ev("past", "2026-10-05T13:00:00Z", [amy], "2026-10-05T14:00:00Z"),
+        ev("bo-now", "2026-10-05T14:30:00Z", [bo], "2026-10-05T15:30:00Z"),
+        ev("team", "2026-10-05T16:00:00Z", []),
+        ev("amy-later", "2026-10-05T18:00:00Z", [amy]),
+      ],
+      "2026-10-05",
+      now,
+    );
+    const byId = Object.fromEntries(days.map((d) => [d.id, d]));
+    expect(byId.u1.next?.id).toBe("team");
+    expect(byId.u2.next).toMatchObject({ id: "bo-now", now: true });
+  });
+
+  it("includes people who only have events", () => {
+    const cy: Assignee = { id: "u3", name: "Cy Example", initials: "CE" };
+    const days = teamToday([], [ev("shoot", "2026-10-06T15:00:00Z", [cy])], "2026-10-05", now);
+    expect(days.map((d) => d.id)).toEqual(["u3"]);
+    expect(days[0].tasks).toEqual([]);
   });
 });

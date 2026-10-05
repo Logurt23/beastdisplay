@@ -1,5 +1,5 @@
 import { sortProjects } from "./sort";
-import type { Assignee, Project, Stage } from "./types";
+import type { Assignee, CalendarEvent, Project, Stage } from "./types";
 
 /**
  * Whiteboard views (2026-10-05). The office whiteboard has four sections:
@@ -54,4 +54,81 @@ export function dueToday(projects: readonly Project[], today: string): { today: 
     today: sortProjects(open.filter((p) => p.dueOn === today)),
     overdue: open.filter((p) => p.dueOn! < today).length,
   };
+}
+
+/**
+ * "Projects today" tile: open work on the board that is not parked in Pending,
+ * plus how many of those are due today.
+ */
+export function projectsToday(projects: readonly Project[], today: string): { count: number; dueToday: number } {
+  const open = projects.filter((p) => p.status !== "done" && p.stage !== "pending");
+  return { count: open.length, dueToday: open.filter((p) => p.dueOn === today).length };
+}
+
+export interface NextEvent {
+  id: string;
+  title: string;
+  /** Chicago start instant, ms. */
+  startsAt: number;
+  endsAt: number;
+  /** True when the event has already started. */
+  now: boolean;
+}
+
+export interface PersonDay {
+  id: string;
+  assignee: Assignee;
+  /** What this person should work on, most urgent first. */
+  tasks: Project[];
+  next: NextEvent | null;
+}
+
+const STAGE_ORDER: Record<Stage, number> = { launch: 0, edits: 1, development: 2, pending: 3 };
+const HOUR = 3_600_000;
+const WEEK = 7 * 24 * HOUR;
+
+/**
+ * Person-based overview: one entry per person with open work or an event.
+ * Tasks: due today or overdue first, then Push live, Edits, their development
+ * queue by rank, and Pending last. Next event: the first one this person is in
+ * (or a whole-team event) that has not ended, within the next 7 days.
+ */
+export function teamToday(projects: readonly Project[], events: readonly CalendarEvent[], today: string, nowMs: number): PersonDay[] {
+  const people = new Map<string, PersonDay>();
+  const person = (a: Assignee) => {
+    let d = people.get(a.id);
+    if (!d) people.set(a.id, (d = { id: a.id, assignee: a, tasks: [], next: null }));
+    return d;
+  };
+  const open = sortProjects(projects.filter((p) => p.status !== "done" && p.assignee));
+  for (const p of open) person(p.assignee!).tasks.push(p);
+  const urgent = (p: Project) => (p.dueOn !== null && p.dueOn <= today ? 0 : 1);
+  for (const d of people.values()) {
+    d.tasks.sort(
+      (a, b) =>
+        urgent(a) - urgent(b) ||
+        STAGE_ORDER[a.stage] - STAGE_ORDER[b.stage] ||
+        byRank(a, b) ||
+        open.indexOf(a) - open.indexOf(b),
+    );
+  }
+
+  const upcoming = events
+    .map((e) => {
+      const start = Date.parse(e.startsAt);
+      let end = e.endsAt ? Date.parse(e.endsAt) : start + HOUR;
+      if (!(end > start)) end = start + HOUR;
+      return { e, start, end };
+    })
+    .filter(({ start, end }) => end > nowMs && start < nowMs + WEEK)
+    .sort((a, b) => a.start - b.start);
+  for (const { e } of upcoming) for (const a of e.people) person(a);
+  for (const d of people.values()) {
+    const hit = upcoming.find(({ e }) => e.people.length === 0 || e.people.some((a) => a.id === d.id));
+    if (hit) d.next = { id: hit.e.id, title: hit.e.title, startsAt: hit.start, endsAt: hit.end, now: hit.start <= nowMs };
+  }
+
+  return [...people.values()].sort(
+    (a, b) => b.tasks.length - a.tasks.length || a.assignee.name.localeCompare(b.assignee.name),
+  );
 }

@@ -120,7 +120,8 @@ function event(v: unknown): CalendarEvent | null {
   const id = s(v.id);
   const startsAt = iso(v.startsAt);
   if (!id || !startsAt) return null;
-  return { id, title: s(v.title) ?? "Event", startsAt, endsAt: iso(v.endsAt), kind: s(v.kind) };
+  const people = Array.isArray(v.people) ? v.people.map(assignee).filter((a): a is Assignee => a !== null) : [];
+  return { id, title: s(v.title) ?? "Event", startsAt, endsAt: iso(v.endsAt), kind: s(v.kind), people };
 }
 
 function goal(v: unknown): Goal | null {

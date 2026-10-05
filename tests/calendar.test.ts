@@ -14,7 +14,7 @@ const proj = (id: string, dueOn: string | null, status: Project["status"] = "act
   stage: "development",
   rank: null,
 });
-const ev = (id: string, startsAt: string, endsAt: string | null = null): CalendarEvent => ({ id, title: id, startsAt, endsAt, kind: null });
+const ev = (id: string, startsAt: string, endsAt: string | null = null): CalendarEvent => ({ id, title: id, startsAt, endsAt, kind: null, people: [] });
 
 describe("buildWeek", () => {
   const today = "2026-10-07"; // Wednesday

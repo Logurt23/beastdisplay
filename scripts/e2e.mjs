@@ -101,7 +101,7 @@ async function main() {
     ["4k", { width: 3840, height: 2160 }],
   ]) {
     const { context, page, errors, hosts } = await openPage(viewport);
-    await page.getByText("Leads today").waitFor({ timeout: 10_000 });
+    await page.getByText("Projects today").waitFor({ timeout: 10_000 });
     await page.getByText("Live", { exact: true }).waitFor({ timeout: 10_000 });
     await page.evaluate(() => document.fonts.ready);
     await sleep(600);
@@ -180,7 +180,7 @@ async function main() {
 
   // Changed payload: only the changed tile animates.
   {
-    const { context, page } = await openPage({ width: 1920, height: 1080 });
+    const { context, page } = await openPage({ width: 1920, height: 1080 }, "/?fn=emm&layout=pulse");
     await page.getByText("Live", { exact: true }).waitFor({ timeout: 10_000 });
     await mode("changed");
     await page.locator('[data-stat="leads_today"]', { hasText: "15" }).waitFor({ timeout: 10_000 });

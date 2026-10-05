@@ -6,6 +6,7 @@ import type { Board, PulseTile } from "../types";
 import styles from "../styles/emm.module.css";
 import { STATUS_COLOR, STATUS_WORD } from "./labels";
 import { Panel } from "./Panel";
+import { projectsToday } from "../board";
 import { DueToday } from "./DueToday";
 import { Lanes } from "./Lanes";
 import { Ticker } from "./Ticker";
@@ -21,29 +22,28 @@ const TONE_GLYPH: Record<PulseTile["tone"], string> = { up: "▲", down: "▼", 
 const BUCKET_WORD = { overdue: "Overdue", today: "Today", soon: "Soon", scheduled: "Sched.", later: "Later", none: "None", done: "Done" } as const;
 
 /**
- * Section 6A, reworked 2026-10-05 from the office whiteboard: Mothership tiles
- * on the left, who's on what (one lane per person) in the middle, due today on
+ * Section 6A, reworked 2026-10-05 from the office whiteboard: Projects today
+ * (open work not in Pending, from the board) on the left, who's on what (one lane per person) in the middle, due today on
  * the right, ticker underneath. Tone comes from `tone` only.
  */
 export function PulsePanel({ board, today, lobbyMode, reduced }: { board: Board; today: string; lobbyMode: boolean; reduced: boolean }) {
-  const { shown } = filterTiles(board.pulse.tiles);
-  const status = board.pulse.sourceStatus;
-  const connected = status === "live" && shown.length > 0;
-
+  const pt = projectsToday(board.projects, today);
   return (
     <Panel title="Pulse" className={styles.pulse}>
       <div className={styles.pulseGrid}>
         <div className={styles.pulseTiles}>
-          {connected ? (
-            shown.map((t) => <Tile key={t.id} tile={t} />)
-          ) : (
-            <div className={`${styles.tile} ${styles.tileEmpty}`}>
-              <div className={styles.tileEmptyTitle}>{status === "error" ? "Mothership error" : "Mothership not connected"}</div>
-              <div className={styles.tileEmptyDetail}>
-                {status === "error" ? "Nexus could not reach Mothership." : "Pulse not configured in Nexus. No numbers rather than zeros."}
-              </div>
-            </div>
-          )}
+          <Tile
+            tile={{
+              id: "projects_today",
+              label: "Projects today",
+              value: pt.count,
+              display: String(pt.count),
+              delta: null,
+              deltaLabel: `${pt.dueToday} due today`,
+              tone: "unknown",
+              source: "board",
+            }}
+          />
         </div>
         <Lanes projects={board.projects} today={today} lobbyMode={lobbyMode} />
         <DueToday projects={board.projects} today={today} lobbyMode={lobbyMode} />
@@ -53,7 +53,22 @@ export function PulsePanel({ board, today, lobbyMode, reduced }: { board: Board;
   );
 }
 
-/** Current stats 4 to 6 as tiles (projects by status, due buckets, open per person). Used on the pulse layout. */
+/** Mothership tiles (leads today), or an honest "not connected" when Nexus has none. */
+function MothershipTiles({ board }: { board: Board }) {
+  const { shown } = filterTiles(board.pulse.tiles);
+  const status = board.pulse.sourceStatus;
+  if (status === "live" && shown.length > 0) return <>{shown.map((t) => <Tile key={t.id} tile={t} />)}</>;
+  return (
+    <div className={`${styles.tile} ${styles.tileEmpty}`}>
+      <div className={styles.tileEmptyTitle}>{status === "error" ? "Mothership error" : "Mothership not connected"}</div>
+      <div className={styles.tileEmptyDetail}>
+        {status === "error" ? "Nexus could not reach Mothership." : "Pulse not configured in Nexus. No numbers rather than zeros."}
+      </div>
+    </div>
+  );
+}
+
+/** Mothership tiles plus current stats 4 to 6 as tiles (projects by status, due buckets, open per person). Used on the pulse layout. */
 export function StatsStrip({ board, today }: { board: Board; today: string }) {
   const byStatus = projectsByStatus(board.projects);
   const buckets = dueBuckets(board.projects, today);
@@ -62,6 +77,7 @@ export function StatsStrip({ board, today }: { board: Board; today: string }) {
   return (
     <Panel title="Board stats">
       <div className={styles.tiles}>
+        <MothershipTiles board={board} />
         <div className={`${styles.tile} ${styles.tileWide}`} data-stat="projects_by_status">
           <div className={styles.tileLabel}>Projects by status</div>
           <div className={styles.miniGrid}>
