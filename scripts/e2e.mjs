@@ -214,13 +214,39 @@ async function main() {
     const intro = page.locator("[data-intro]");
     await intro.waitFor({ state: "visible", timeout: 5_000 });
     const text = (await intro.textContent()) ?? "";
+    // Screenshots are slow next to the timeline, so the finale is measured in the page itself:
+    // once WAR ROOM has finished sliding to the middle.
+    await page.evaluate(() => {
+      const el = document.querySelector("[data-intro]");
+      window.__finale = new Promise((done) => {
+        const measure = () => {
+          const t = el.querySelector("[class*='_title_']")?.getBoundingClientRect();
+          const logo = el.querySelector("img");
+          done({ mid: t ? Math.round(t.left + t.width / 2) : null, logo: logo ? Number(getComputedStyle(logo).opacity) : null });
+        };
+        const watch = new MutationObserver(() => {
+          if (el.className.includes("onCenter")) {
+            watch.disconnect();
+            const wrap = el.querySelector("[class*='_titleWrap_']");
+            const fallback = setTimeout(measure, 4_000);
+            wrap?.addEventListener("transitionend", (e) => {
+              if (e.propertyName !== "transform") return;
+              clearTimeout(fallback);
+              measure();
+            });
+          }
+        });
+        watch.observe(el, { attributes: true, attributeFilter: ["class"] });
+      });
+    });
     await page.waitForTimeout(5_500);
     check("intro: still playing after the board loads", await intro.isVisible());
     await page.screenshot({ path: `${OUT}/intro-1080p-title.png` });
-    await page.waitForTimeout(3_500);
+    await page.waitForTimeout(3_000);
     await page.screenshot({ path: `${OUT}/intro-1080p-status.png` });
-    await page.waitForTimeout(3_200);
-    await page.screenshot({ path: `${OUT}/intro-1080p-dissolve.png` });
+    const finale = await page.evaluate(() => window.__finale);
+    check("intro: EMM logo fades out at the end, not burned", finale.logo !== null && finale.logo < 0.05, JSON.stringify(finale));
+    check("intro: War Room slides to the middle", finale.mid !== null && Math.abs(finale.mid - 960) < 24, JSON.stringify(finale));
     check("intro: shows War Room, not BeastDisplay", /war room/i.test(text) && !/beastdisplay/i.test(text), text.replace(/\s+/g, " "));
     await intro.waitFor({ state: "detached", timeout: 6_000 });
     check("intro: gone after about 15 s, board underneath", await page.getByLabel("Pulse").isVisible());
