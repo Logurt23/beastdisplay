@@ -207,7 +207,7 @@ async function main() {
     writeConfig();
   }
 
-  // War Room intro: plays once per tab for 15 s, branded EMM and War Room, never BeastDisplay.
+  // War Room intro: plays once per tab for 20 s, branded EMM and War Room, never BeastDisplay.
   {
     writeConfig({}, { intro: true });
     const { context, page, errors } = await openPage({ width: 1920, height: 1080 });
@@ -248,8 +248,8 @@ async function main() {
     check("intro: EMM logo fades out at the end, not burned", finale.logo !== null && finale.logo < 0.05, JSON.stringify(finale));
     check("intro: War Room slides to the middle", finale.mid !== null && Math.abs(finale.mid - 960) < 24, JSON.stringify(finale));
     check("intro: shows War Room, not BeastDisplay", /war room/i.test(text) && !/beastdisplay/i.test(text), text.replace(/\s+/g, " "));
-    await intro.waitFor({ state: "detached", timeout: 6_000 });
-    check("intro: gone after about 15 s, board underneath", await page.getByLabel("Pulse").isVisible());
+    await intro.waitFor({ state: "detached", timeout: 8_000 });
+    check("intro: gone after about 20 s, board underneath", await page.getByLabel("Pulse").isVisible());
     check("intro: no console errors", errors.length === 0, errors.join(" | "));
     await page.reload();
     await page.getByLabel("Pulse").waitFor({ timeout: 10_000 });

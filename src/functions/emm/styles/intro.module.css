@@ -23,7 +23,7 @@
 .half { position: absolute; inset: 0; overflow: hidden; will-change: transform; }
 .top { clip-path: inset(0 0 calc(100% - var(--seam)) 0); }
 .bottom { clip-path: inset(var(--seam) 0 0 0); }
-.onSplit .half { transition: transform 1.4s cubic-bezier(0.7, 0, 0.2, 1); }
+.onSplit .half { transition: transform 1.6s cubic-bezier(0.7, 0, 0.2, 1); }
 .onSplit .top { transform: translateY(-100%); }
 .onSplit .bottom { transform: translateY(100%); }
 
@@ -133,7 +133,7 @@
 .onRed .rule { background: var(--red); box-shadow: 0 0 calc(20 * var(--u)) rgba(255, 46, 63, 0.7); }
 .onFade .rule { transform: scaleY(0); opacity: 0; }
 
-.titleWrap { position: relative; display: block; transition: transform 1.3s var(--ease); }
+.titleWrap { position: relative; display: block; transition: transform 1.6s var(--ease); }
 .onCenter .titleWrap { transform: translateX(var(--slide)) scale(1.12); }
 .title {
   display: block;

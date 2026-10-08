@@ -3,7 +3,7 @@ import styles from "../styles/intro.module.css";
 import sparks from "../styles/sparks.module.css";
 
 /**
- * War Room launch intro. Plays once per browser tab when the board boots, 15 s.
+ * War Room launch intro. Plays once per browser tab when the board boots, 20 s.
  * The field fades up with the Street Phoenix spark field drifting through it (the
  * same port FireCore's intro uses), the EMM Advertising logo lights, WAR ROOM
  * wipes in and catches a shine, and a status line follows the real board load.
@@ -16,17 +16,17 @@ import sparks from "../styles/sparks.module.css";
 /** Milliseconds from the start. The split runs from `split` to `done`. */
 export const INTRO_T = {
   field: 80,
-  logo: 900,
-  rule: 2300,
-  title: 2700,
-  shine: 4600,
-  status: 6000,
-  red: 9800,
-  fade: 10600,
-  center: 11500,
-  seam: 13000,
-  split: 13600,
-  done: 15000,
+  logo: 1000,
+  rule: 2600,
+  title: 3000,
+  shine: 5200,
+  status: 6800,
+  red: 13000,
+  fade: 14000,
+  center: 15200,
+  seam: 17600,
+  split: 18300,
+  done: 20000,
 };
 export const INTRO_SEEN = "warroom-intro-seen";
 
