@@ -1,0 +1,529 @@
+{
+  "_fixture": {
+    "note": "FIXTURE DATA for local development and tests. Not EMM business data. Never served in production.",
+    "anchorDate": "2026-10-03"
+  },
+  "generatedAt": "2026-10-03T14:00:00Z",
+  "timezone": "America/Chicago",
+  "staleAfterSeconds": 60,
+  "pulse": {
+    "sourceStatus": "live",
+    "tiles": [
+      {
+        "id": "leads_today",
+        "label": "Leads today",
+        "value": 14,
+        "display": "14",
+        "delta": 3,
+        "deltaLabel": "+3 vs yesterday",
+        "tone": "up",
+        "source": "mothership"
+      }
+    ],
+    "ticker": [
+      {
+        "id": "gh_f1",
+        "at": "2026-10-03T13:52:00Z",
+        "text": "Logan merged #42 Add hero video \u00b7 sample-site",
+        "tone": "good"
+      },
+      {
+        "id": "gh_f2",
+        "at": "2026-10-03T13:40:00Z",
+        "text": "Michael pushed 3 commits to main: Fix mobile nav \u00b7 sample-landing",
+        "tone": "info"
+      },
+      {
+        "id": "gh_f3",
+        "at": "2026-10-03T13:21:00Z",
+        "text": "Logan released v1.4.0 \u00b7 beastdisplay",
+        "tone": "good"
+      },
+      {
+        "id": "gh_f4",
+        "at": "2026-10-03T12:58:00Z",
+        "text": "Michael opened #18 Booking form \u00b7 sample-site",
+        "tone": "info"
+      },
+      {
+        "id": "gh_f5",
+        "at": "2026-10-03T12:30:00Z",
+        "text": "Logan tagged v1.3.2 \u00b7 sample-landing",
+        "tone": "good"
+      },
+      {
+        "id": "gh_f6",
+        "at": "2026-10-03T11:47:00Z",
+        "text": "Michael pushed to staging \u00b7 sample-site",
+        "tone": "info"
+      }
+    ]
+  },
+  "projects": [
+    {
+      "id": "prj_f1",
+      "name": "Website rebuild",
+      "client": "Sample Roofing",
+      "status": "active",
+      "priority": "high",
+      "assignee": {
+        "id": "usr_f1",
+        "name": "Logan",
+        "initials": "L"
+      },
+      "dueOn": "2026-10-07",
+      "lobbySafe": true,
+      "stage": "development",
+      "rank": 3
+    },
+    {
+      "id": "prj_f2",
+      "name": "Spring ad set",
+      "client": "Sample Dental",
+      "status": "active",
+      "priority": "normal",
+      "assignee": {
+        "id": "usr_f2",
+        "name": "Michael",
+        "initials": "M"
+      },
+      "dueOn": "2026-10-01",
+      "lobbySafe": false,
+      "stage": "development",
+      "rank": 1
+    },
+    {
+      "id": "prj_f3",
+      "name": "SEO audit",
+      "client": "Sample HVAC",
+      "status": "waiting",
+      "priority": "rush",
+      "assignee": {
+        "id": "usr_f3",
+        "name": "Payton",
+        "initials": "P"
+      },
+      "dueOn": "2026-10-03",
+      "lobbySafe": false,
+      "stage": "pending",
+      "rank": null
+    },
+    {
+      "id": "prj_f4",
+      "name": "OTT spot edit",
+      "client": "Sample Law",
+      "status": "review",
+      "priority": "normal",
+      "assignee": {
+        "id": "usr_f4",
+        "name": "Claire",
+        "initials": "C"
+      },
+      "dueOn": "2026-10-04",
+      "lobbySafe": true,
+      "stage": "edits",
+      "rank": null
+    },
+    {
+      "id": "prj_f5",
+      "name": "Social calendar",
+      "client": "Sample Bakery",
+      "status": "blocked",
+      "priority": "normal",
+      "assignee": {
+        "id": "usr_f1",
+        "name": "Logan",
+        "initials": "L"
+      },
+      "dueOn": "2026-10-06",
+      "lobbySafe": false,
+      "stage": "development",
+      "rank": 2
+    },
+    {
+      "id": "prj_f6",
+      "name": "Landing page",
+      "client": "Sample Auto",
+      "status": "queued",
+      "priority": "low",
+      "assignee": {
+        "id": "usr_f2",
+        "name": "Michael",
+        "initials": "M"
+      },
+      "dueOn": null,
+      "lobbySafe": false,
+      "stage": "development",
+      "rank": 3
+    },
+    {
+      "id": "prj_f7",
+      "name": "Brand refresh",
+      "client": "Sample Clinic",
+      "status": "active",
+      "priority": "normal",
+      "assignee": {
+        "id": "usr_f3",
+        "name": "Payton",
+        "initials": "P"
+      },
+      "dueOn": "2026-10-13",
+      "lobbySafe": true,
+      "stage": "launch",
+      "rank": null
+    },
+    {
+      "id": "prj_f8",
+      "name": "Google Ads restructure",
+      "client": "Sample Roofing",
+      "status": "done",
+      "priority": "normal",
+      "assignee": {
+        "id": "usr_f4",
+        "name": "Claire",
+        "initials": "C"
+      },
+      "dueOn": "2026-09-28",
+      "lobbySafe": false,
+      "stage": "development",
+      "rank": null
+    },
+    {
+      "id": "prj_f9",
+      "name": "Photo shoot edit",
+      "client": "Sample Dental",
+      "status": "active",
+      "priority": "rush",
+      "assignee": {
+        "id": "usr_f1",
+        "name": "Logan",
+        "initials": "L"
+      },
+      "dueOn": "2026-10-05",
+      "lobbySafe": false,
+      "stage": "development",
+      "rank": 1
+    },
+    {
+      "id": "prj_f10",
+      "name": "Email series",
+      "client": "Sample HVAC",
+      "status": "waiting",
+      "priority": "normal",
+      "assignee": {
+        "id": "usr_f2",
+        "name": "Michael",
+        "initials": "M"
+      },
+      "dueOn": "2026-10-18",
+      "lobbySafe": true,
+      "stage": "pending",
+      "rank": null
+    },
+    {
+      "id": "prj_f11",
+      "name": "Website rebuild phase 2",
+      "client": "Sample Law",
+      "status": "review",
+      "priority": "high",
+      "assignee": {
+        "id": "usr_f3",
+        "name": "Payton",
+        "initials": "P"
+      },
+      "dueOn": "2026-10-03",
+      "lobbySafe": false,
+      "stage": "edits",
+      "rank": null
+    },
+    {
+      "id": "prj_f12",
+      "name": "Spring ad set phase 2",
+      "client": "Sample Bakery",
+      "status": "active",
+      "priority": "normal",
+      "assignee": null,
+      "dueOn": "2026-10-10",
+      "lobbySafe": false,
+      "stage": "development",
+      "rank": null
+    },
+    {
+      "id": "prj_f13",
+      "name": "SEO audit phase 2",
+      "client": "Sample Auto",
+      "status": "queued",
+      "priority": "low",
+      "assignee": {
+        "id": "usr_f1",
+        "name": "Logan",
+        "initials": "L"
+      },
+      "dueOn": "2026-11-02",
+      "lobbySafe": true,
+      "stage": "development",
+      "rank": 4
+    },
+    {
+      "id": "prj_f14",
+      "name": "OTT spot edit phase 2",
+      "client": "Sample Clinic",
+      "status": "active",
+      "priority": "normal",
+      "assignee": {
+        "id": "usr_f2",
+        "name": "Michael",
+        "initials": "M"
+      },
+      "dueOn": "2026-10-02",
+      "lobbySafe": false,
+      "stage": "development",
+      "rank": 2
+    },
+    {
+      "id": "prj_f15",
+      "name": "Social calendar phase 2",
+      "client": "Sample Roofing",
+      "status": "blocked",
+      "priority": "high",
+      "assignee": {
+        "id": "usr_f2",
+        "name": "Michael",
+        "initials": "M"
+      },
+      "dueOn": "2026-10-09",
+      "lobbySafe": false,
+      "stage": "development",
+      "rank": 4
+    },
+    {
+      "id": "prj_f16",
+      "name": "Landing page phase 2",
+      "client": "Sample Dental",
+      "status": "active",
+      "priority": "normal",
+      "assignee": {
+        "id": "usr_f1",
+        "name": "Logan",
+        "initials": "L"
+      },
+      "dueOn": "2026-10-16",
+      "lobbySafe": true,
+      "stage": "development",
+      "rank": 5
+    },
+    {
+      "id": "prj_f17",
+      "name": "Brand refresh phase 2",
+      "client": "Sample HVAC",
+      "status": "done",
+      "priority": "normal",
+      "assignee": {
+        "id": "usr_f1",
+        "name": "Logan",
+        "initials": "L"
+      },
+      "dueOn": "2026-09-24",
+      "lobbySafe": false,
+      "stage": "development",
+      "rank": null
+    },
+    {
+      "id": "prj_f18",
+      "name": "Google Ads restructure phase 2",
+      "client": "Sample Law",
+      "status": "waiting",
+      "priority": "normal",
+      "assignee": {
+        "id": "usr_f2",
+        "name": "Michael",
+        "initials": "M"
+      },
+      "dueOn": null,
+      "lobbySafe": false,
+      "stage": "pending",
+      "rank": null
+    },
+    {
+      "id": "prj_f19",
+      "name": "Photo shoot edit phase 2",
+      "client": "Sample Bakery",
+      "status": "active",
+      "priority": "normal",
+      "assignee": {
+        "id": "usr_f3",
+        "name": "Payton",
+        "initials": "P"
+      },
+      "dueOn": "2026-10-06",
+      "lobbySafe": true,
+      "stage": "launch",
+      "rank": null
+    },
+    {
+      "id": "prj_f20",
+      "name": "Email series phase 2",
+      "client": "Sample Auto",
+      "status": "review",
+      "priority": "normal",
+      "assignee": {
+        "id": "usr_f4",
+        "name": "Claire",
+        "initials": "C"
+      },
+      "dueOn": "2026-10-24",
+      "lobbySafe": false,
+      "stage": "edits",
+      "rank": null
+    }
+  ],
+  "events": [
+    {
+      "id": "cal_f1",
+      "title": "Client shoot",
+      "startsAt": "2026-10-06T15:00:00Z",
+      "endsAt": "2026-10-06T17:00:00Z",
+      "kind": "shoot",
+      "people": [
+        {
+          "id": "usr_f3",
+          "name": "Payton",
+          "initials": "P"
+        },
+        {
+          "id": "usr_f4",
+          "name": "Claire",
+          "initials": "C"
+        }
+      ]
+    },
+    {
+      "id": "cal_f2",
+      "title": "Monthly review",
+      "startsAt": "2026-09-29T19:00:00Z",
+      "endsAt": "2026-09-29T20:00:00Z",
+      "kind": "meeting",
+      "people": []
+    },
+    {
+      "id": "cal_f3",
+      "title": "Late edit session",
+      "startsAt": "2026-10-01T04:30:00Z",
+      "endsAt": "2026-10-01T05:30:00Z",
+      "kind": "edit",
+      "people": [
+        {
+          "id": "usr_f1",
+          "name": "Logan",
+          "initials": "L"
+        }
+      ]
+    },
+    {
+      "id": "cal_f4",
+      "title": "Overnight render",
+      "startsAt": "2026-10-02T03:00:00Z",
+      "endsAt": "2026-10-02T09:00:00Z",
+      "kind": null,
+      "people": []
+    },
+    {
+      "id": "cal_f5",
+      "title": "Strategy call",
+      "startsAt": "2026-10-03T16:00:00Z",
+      "endsAt": null,
+      "kind": "call",
+      "people": [
+        {
+          "id": "usr_f1",
+          "name": "Logan",
+          "initials": "L"
+        },
+        {
+          "id": "usr_f2",
+          "name": "Michael",
+          "initials": "M"
+        }
+      ]
+    },
+    {
+      "id": "cal_f6",
+      "title": "Launch check",
+      "startsAt": "2026-10-03T21:00:00Z",
+      "endsAt": "2026-10-03T21:30:00Z",
+      "kind": "meeting",
+      "people": [
+        {
+          "id": "usr_f3",
+          "name": "Payton",
+          "initials": "P"
+        }
+      ]
+    },
+    {
+      "id": "cal_f7",
+      "title": "Site walk",
+      "startsAt": "2026-10-03T18:00:00Z",
+      "endsAt": "2026-10-03T19:00:00Z",
+      "kind": "shoot",
+      "people": [
+        {
+          "id": "usr_f4",
+          "name": "Claire",
+          "initials": "C"
+        },
+        {
+          "id": "usr_f2",
+          "name": "Michael",
+          "initials": "M"
+        }
+      ]
+    },
+    {
+      "id": "cal_f8",
+      "title": "Team sync",
+      "startsAt": "2026-10-03T14:30:00Z",
+      "endsAt": "2026-10-03T15:00:00Z",
+      "kind": "meeting",
+      "people": []
+    }
+  ],
+  "goals": [
+    {
+      "id": "goal_f1",
+      "name": "Sites launched this month",
+      "current": 3,
+      "target": 6,
+      "unit": "sites",
+      "goodDirection": "up",
+      "updatedAt": "2026-10-03T05:00:00Z"
+    },
+    {
+      "id": "goal_f2",
+      "name": "Open blocked projects",
+      "current": 2,
+      "target": 1,
+      "unit": "projects",
+      "goodDirection": "down",
+      "updatedAt": "2026-10-03T05:00:00Z"
+    },
+    {
+      "id": "goal_f3",
+      "name": "Ad sets shipped this week",
+      "current": 9,
+      "target": 8,
+      "unit": "sets",
+      "goodDirection": "up",
+      "updatedAt": "2026-10-03T05:00:00Z"
+    },
+    {
+      "id": "goal_f4",
+      "name": "Avg. turnaround",
+      "current": 3.5,
+      "target": 4,
+      "unit": "days",
+      "goodDirection": "down",
+      "updatedAt": "2026-10-03T05:00:00Z"
+    }
+  ]
+}

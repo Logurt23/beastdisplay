@@ -1,0 +1,9 @@
+node_modules/
+dist/
+# Runtime config holds the display token. It lives on the display host only.
+config.local.js
+public/config.js
+artifacts/
+*.log
+.DS_Store
+*.tsbuildinfo
