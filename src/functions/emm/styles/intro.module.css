@@ -1,0 +1,226 @@
+/*
+ * War Room launch intro. State classes are added in order by Intro.tsx:
+ * onField, onLogo, onRule, onTitle, onShine, onStatus, onRed, onFade,
+ * onCenter, onSeam, onSplit (onSkip cuts it short). The scene is drawn in two
+ * halves split at --seam, so the ending can open the screen like a door.
+ * Transform, opacity and colour do the work. Sizes are 1080p px x --u.
+ */
+.intro {
+  --mint: var(--brand-primary, #58f8b8);
+  --red: #ff2e3f;
+  --ink: #050806;
+  --ease: cubic-bezier(0.65, 0, 0.35, 1);
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  overflow: hidden;
+  user-select: none;
+  cursor: none;
+}
+.onSkip { opacity: 0; transition: opacity 0.5s ease; pointer-events: none; }
+
+/* Each half is the full scene, clipped to its side of the seam. */
+.half { position: absolute; inset: 0; overflow: hidden; will-change: transform; }
+.top { clip-path: inset(0 0 calc(100% - var(--seam)) 0); }
+.bottom { clip-path: inset(var(--seam) 0 0 0); }
+.onSplit .half { transition: transform 1.6s cubic-bezier(0.7, 0, 0.2, 1); }
+.onSplit .top { transform: translateY(-100%); }
+.onSplit .bottom { transform: translateY(100%); }
+
+/* Street Phoenix's glow from the bottom of the screen, in EMM green. */
+.bg { position: absolute; inset: 0; background: radial-gradient(ellipse at bottom, #0d7850 -200%, var(--ink) 100%); }
+
+/* The Nexus field, brighter: three mint blooms drifting out of step. Soft gradients, no blur
+   filter: the scene is drawn twice for the split, and blur is the costly part on a TV. */
+.glow { position: absolute; inset: 0; opacity: 0; transition: opacity 1.8s ease; }
+.onField .glow { opacity: 1; }
+.onRed .glow { opacity: 0; transition-duration: 1.2s; }
+.bloom {
+  position: absolute;
+  width: 70vmax;
+  height: 70vmax;
+  border-radius: 50%;
+  will-change: transform;
+}
+.b1 { left: -20vmax; top: -18vmax; background: radial-gradient(circle, rgba(13, 120, 80, 0.7), transparent 65%); animation: driftA 9s ease-in-out infinite alternate; }
+.b2 { right: -24vmax; bottom: -26vmax; background: radial-gradient(circle, rgba(13, 120, 80, 0.6), transparent 65%); animation: driftB 11s ease-in-out infinite alternate; }
+.b3 { left: 28vw; top: 14vh; width: 50vmax; height: 50vmax; background: radial-gradient(circle, rgba(88, 248, 184, 0.16), transparent 60%); animation: driftC 7s ease-in-out infinite alternate; }
+@keyframes driftA { to { transform: translate3d(10vw, 8vh, 0); } }
+@keyframes driftB { to { transform: translate3d(-9vw, -10vh, 0); } }
+@keyframes driftC { from { transform: scale(0.94); } to { transform: translate3d(-4vw, 3vh, 0) scale(1.06); } }
+
+/* The red ending: the same bottom glow in red, breathing once the scene has turned. */
+.redWash {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  background:
+    radial-gradient(ellipse 70% 55% at 50% 50%, rgba(255, 46, 63, 0.22), transparent 70%),
+    radial-gradient(ellipse at bottom, #c4121f -120%, #120203 100%);
+  transition: opacity 1.2s ease;
+}
+.onRed .redWash { opacity: 1; animation: breathe 1.6s ease-in-out 1.2s infinite alternate; }
+@keyframes breathe { to { filter: brightness(1.25); } }
+
+/* Street Phoenix sparks (sparks.module.css): mint, then red; they rush up as the screen splits. */
+.sparks {
+  color: var(--mint);
+  opacity: 0;
+  transition: opacity 2s ease, color 1.2s ease, transform 1.6s cubic-bezier(0.5, 0, 0.75, 0);
+}
+.onField .sparks { opacity: 1; }
+.onRed .sparks { color: var(--red); }
+.onSeam .sparks { transform: translateY(-35vh); }
+
+.stage {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: calc(64 * var(--u));
+}
+.float { animation: bob 3.4s ease-in-out infinite alternate; }
+@keyframes bob { from { transform: translateY(calc(-6 * var(--u))); } to { transform: translateY(calc(6 * var(--u))); } }
+
+/* Lockup: logo | rule | WAR ROOM, as in the board header, at hero size. */
+.lockup {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: calc(56 * var(--u));
+}
+
+.logo {
+  display: block;
+  height: calc(190 * var(--u));
+  width: auto;
+  opacity: 0;
+  transform: translateY(calc(30 * var(--u))) scale(0.8);
+  filter: blur(calc(8 * var(--u)));
+  transition: opacity 1s ease, transform 1.4s cubic-bezier(0.2, 0.8, 0.2, 1), filter 1.2s ease;
+}
+.onLogo .logo {
+  opacity: 1;
+  transform: none;
+  filter: blur(0) drop-shadow(0 0 calc(24 * var(--u)) rgba(88, 248, 184, 0.45));
+  animation: glowPulse 2.4s ease-in-out 1.4s infinite alternate;
+}
+@keyframes glowPulse {
+  from { filter: blur(0) drop-shadow(0 0 calc(18 * var(--u)) rgba(88, 248, 184, 0.35)); }
+  to { filter: blur(0) drop-shadow(0 0 calc(34 * var(--u)) rgba(88, 248, 184, 0.7)); }
+}
+/* EMM steps back: a soft fade and drift left, no burn. */
+.onFade .logo {
+  opacity: 0;
+  transform: translateX(calc(-40 * var(--u))) scale(0.96);
+  filter: blur(calc(6 * var(--u)));
+  animation: none;
+  transition: opacity 0.9s ease, transform 1.1s ease, filter 0.9s ease;
+}
+
+.rule {
+  display: block;
+  width: calc(6 * var(--u));
+  height: calc(170 * var(--u));
+  background: var(--mint);
+  border-radius: calc(3 * var(--u));
+  transform: scaleY(0);
+  transition: transform 0.7s var(--ease), background-color 1.2s ease, box-shadow 1.2s ease, opacity 0.7s ease;
+  box-shadow: 0 0 calc(20 * var(--u)) rgba(88, 248, 184, 0.6);
+}
+.onRule .rule { transform: scaleY(1); }
+.onRed .rule { background: var(--red); box-shadow: 0 0 calc(20 * var(--u)) rgba(255, 46, 63, 0.7); }
+.onFade .rule { transform: scaleY(0); opacity: 0; }
+
+.titleWrap { position: relative; display: block; transition: transform 1.6s var(--ease); }
+.onCenter .titleWrap { transform: translateX(var(--slide)) scale(1.12); }
+.title {
+  display: block;
+  font-family: "Barlow Condensed", "Barlow", system-ui, sans-serif;
+  font-weight: 700;
+  font-size: calc(168 * var(--u));
+  line-height: 1;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #f0f0f0;
+  white-space: nowrap;
+  clip-path: inset(-20% 100% -20% 0);
+  transition: clip-path 1.5s var(--ease), text-shadow 1.2s ease, letter-spacing 1.3s var(--ease);
+}
+.onTitle .title { clip-path: inset(-20% -10% -20% -10%); }
+.onRed .title { text-shadow: 0 0 calc(30 * var(--u)) rgba(255, 46, 63, 0.55), 0 0 calc(80 * var(--u)) rgba(255, 46, 63, 0.3); }
+.onCenter .title { letter-spacing: 0.12em; }
+.onSeam .title { text-shadow: 0 0 calc(20 * var(--u)) #fff, 0 0 calc(60 * var(--u)) var(--red), 0 0 calc(140 * var(--u)) var(--red); }
+
+/* One light sweep across WAR ROOM. */
+.shineBar {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(100deg, transparent 40%, rgba(220, 255, 240, 0.85) 50%, transparent 60%) no-repeat;
+  background-size: 250% 100%;
+  background-position: 130% 0;
+  mix-blend-mode: overlay;
+  opacity: 0;
+}
+.onShine .shineBar { opacity: 1; background-position: -30% 0; transition: background-position 1.3s ease-in-out; }
+
+/* The cut: a hot red line flashes across at the seam, then the halves part along it. */
+.seamLine {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: var(--seam);
+  height: calc(4 * var(--u));
+  margin-top: calc(-2 * var(--u));
+  background: linear-gradient(90deg, transparent, var(--red) 15%, #fff 50%, var(--red) 85%, transparent);
+  box-shadow: 0 0 calc(24 * var(--u)) var(--red), 0 0 calc(70 * var(--u)) rgba(255, 46, 63, 0.6);
+  transform: scaleX(0);
+  opacity: 0;
+  pointer-events: none;
+}
+.onSeam .seamLine { transform: scaleX(1); opacity: 1; transition: transform 0.55s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.2s ease; }
+.onSplit .seamLine { opacity: 0; transform: scaleX(1) scaleY(6); transition: opacity 0.9s ease, transform 0.9s ease; }
+
+/* Status line under the lockup: follows the real board load. */
+.status {
+  display: grid;
+  justify-items: center;
+  gap: calc(14 * var(--u));
+  opacity: 0;
+  transform: translateY(calc(12 * var(--u)));
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+.onStatus .status { opacity: 1; transform: none; }
+.onFade .status { opacity: 0; transition-duration: 0.9s; }
+.statusText {
+  font-family: "Barlow", system-ui, sans-serif;
+  font-size: calc(26 * var(--u));
+  font-weight: 500;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: rgba(240, 240, 240, 0.8);
+}
+.bar {
+  display: block;
+  width: calc(420 * var(--u));
+  height: calc(4 * var(--u));
+  border-radius: calc(2 * var(--u));
+  background: rgba(88, 248, 184, 0.15);
+  overflow: hidden;
+}
+.bar > span {
+  display: block;
+  height: 100%;
+  width: 70%;
+  background: var(--mint);
+  box-shadow: 0 0 calc(12 * var(--u)) var(--mint);
+  transform-origin: left;
+  transform: scaleX(0);
+}
+.onStatus .bar > span { transform: scaleX(1); transition: transform 2.6s cubic-bezier(0.2, 0.8, 0.2, 1); }
+.bar > span.barDone { width: 100%; }
+
+@media (prefers-reduced-motion: reduce) {
+  .intro { display: none; }
+}

@@ -1,0 +1,11 @@
+# Cloudflare Pages / Netlify. Copy into dist/ before upload.
+/*
+  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self' data:; connect-src 'self' https://nexus.emmadvertising.com; frame-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'none'
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: no-referrer
+/index.html
+  Cache-Control: no-cache
+/config.js
+  Cache-Control: no-cache
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable

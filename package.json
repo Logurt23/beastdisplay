@@ -1,0 +1,37 @@
+{
+  "name": "beastdisplay",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "BeastDisplay: an always-on URL display with optional function packs.",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc -b",
+    "test": "vitest run",
+    "test:tz": "TZ=UTC vitest run && TZ=Asia/Tokyo vitest run && TZ=America/Chicago vitest run",
+    "nexus:dev": "node nexus-display/dev-server.mjs",
+    "check:e2e": "node scripts/e2e.mjs",
+    "check:soak": "node scripts/soak.mjs",
+    "check:token": "node scripts/check-token.mjs"
+  },
+  "devDependencies": {
+    "@fontsource/barlow": "^5.3.0",
+    "@fontsource/barlow-condensed": "^5.3.0",
+    "@testing-library/react": "^16.3.3",
+    "@types/node": "^26.6.4",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.1.1",
+    "jsdom": "^29.1.1",
+    "playwright-core": "^1.63.0",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.2",
+    "vitest": "^5.0.3"
+  },
+  "dependencies": {
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0"
+  }
+}

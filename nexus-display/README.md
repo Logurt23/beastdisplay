@@ -1,0 +1,67 @@
+# Nexus display routes (to port into Nexus)
+
+The Nexus repository was not available to this build, so these are reference routes written to the build order (Phase 4) and Fable report (3.1, 2.4, 2.6). They are plain Node ESM with no dependencies. Port them into Nexus, or mount them as-is:
+
+```js
+import { createDisplayHandler } from "./nexus-display/routes.mjs";
+import { tokensFromEnv } from "./nexus-display/auth.mjs";
+import { buildBoard } from "./nexus-display/board.mjs";
+import { fetchPulse } from "./nexus-display/mothership.mjs";
+import { gitActivityFromEnv } from "./nexus-display/github.mjs";
+
+// GITHUB_REPOS="owner/a,owner/b", GITHUB_TOKEN=<read-only token>, GITHUB_PEOPLE="githublogin:Logan,..."
+const gitActivity = gitActivityFromEnv();
+
+const display = createDisplayHandler({
+  getTokens: tokensFromEnv("DISPLAY_TOKENS"),            // "office-main:<token>[,office-main:<next>]"
+  allowedOrigins: ["https://warroom.emmadvertising.com"],
+  getBoard: async () =>
+    buildBoard({
+      projects: await nexusProjectsForDisplay(),           // map Nexus field names to section 7 here
+      events: await nexusEventsForDisplay(),
+      goals: await nexusGoalsForDisplay(),
+      pulse: {
+        ...(await fetchPulse({ credentials: mothershipCredentials(), pull: mothershipPull })),
+        ticker: await gitActivity(),                       // Pulse ticker = git activity, newest 15
+      },
+    }),
+});
+
+// Express: app.use((req, res, next) => display(req, res).then((handled) => handled || next()));
+// Node http: if (!(await display(req, res))) { ...your other routes }
+```
+
+## What it does
+
+| Route | Response |
+| --- | --- |
+| `GET /api/display/board` | Section 7 payload plus `pulse.sourceStatus` (approved 2026-10-03). |
+| `GET /api/display/health` | `{ "ok": true, "time": "<iso>" }`. |
+| `OPTIONS` either route | 204 with `Allow-Origin` for the display host only, `Allow-Headers: Authorization, X-Display-Id`, `Max-Age: 600`, `Expose-Headers: Retry-After`. |
+| Anything else on those paths | 405. No write route accepts the display token. |
+
+- `Authorization: Bearer <token>`; missing or wrong token is 401. Tokens are compared as SHA-256 digests in constant time.
+- Each token is bound to a display id. A token sent with a different `X-Display-Id` is 401 and logged as `display-mismatch`.
+- Rate limit: 10 requests per minute per token and display id, then 429 with `Retry-After`.
+- Logs one JSON line per request: time, route, display id, IP, status, outcome. Never the token.
+- `Cache-Control: no-store` on every response.
+- `buildBoard` fills missing arrays with `[]` and stamps `generatedAt`, `timezone: "America/Chicago"`, `staleAfterSeconds: 60`.
+- `fetchPulse` returns `{ tiles: [], ticker: [], sourceStatus: "unconfigured" }` until Mothership credentials and a pull function exist, and `sourceStatus: "error"` if the pull throws. It never fakes numbers. What Mothership is remains an open item.
+
+## Git activity ticker (`github.mjs`)
+
+The ticker under Pulse shows the team's GitHub activity: releases, merged and opened pull requests, pushes and tags, newest first, at most 15. Set `GITHUB_REPOS` (comma-separated `owner/name`), a read-only `GITHUB_TOKEN` (fine-grained, Contents and Metadata read; optional for public repos but the unauthenticated limit is 60 requests an hour), and optionally `GITHUB_PEOPLE` to show names instead of GitHub logins. Each repo is fetched at most once a minute with an ETag, whatever the number of displays, and a failing repo keeps its last good events. The display loops the list and swaps new items in at the loop boundary, so the newest replace the oldest.
+
+## What still needs Nexus access
+
+1. Check whether Nexus already exposes `/api/display/*` (Phase 4 says build only if it does not).
+2. Write the three record queries above against real Nexus tables, mapping names to section 7 without renaming live records. Decide how long `done` projects stay in the payload (open question). Send each project's whiteboard `stage` and `rank` if Nexus can track them (see `docs/functions/emm.md`, approved contract addition); without them the display derives the section from `status` and Push Live stays empty. Send `people` on each calendar event so Team today can show each person their next event; events without it count for the whole team.
+3. Wire Mothership into `fetchPulse` once its API and credentials are known. Nexus computes `leads_today`, its `delta`, `deltaLabel` and `tone`.
+4. Set `DISPLAY_TOKENS` in the Nexus environment and the same token in the display host's `config.js`.
+5. Run the checks: `curl` with the token is 200, without it 401, preflight returns the allow headers, 20 quick requests give ten 429s.
+
+## Local fixture Nexus
+
+`dev-server.mjs` serves the fixture board through these same routes for local development. It rebases fixture dates to today, tags the payload `_seed`, and has dev-only switches (`POST /__dev/mode?m=ok|changed|alternate|down|drop|slow|unconfigured|error`). Never deploy it.
+
+Tests: `routes.test.mjs` (run with `npm test`).

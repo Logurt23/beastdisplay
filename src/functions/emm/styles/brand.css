@@ -1,0 +1,18 @@
+/*
+ * EMM Advertising brand tokens, scoped to the EMM pack (core stays neutral).
+ * Source: EMM brand pack (BRAND-BRIEF.md, 2026-10-05). EMM is mint + black;
+ * the light mark (#F0F0F0) is used on the dark board. The board keeps the
+ * section 9 night war room; mint is the accent on top of it. Status and due
+ * colors never change with the brand, so their meaning stays readable.
+ * Do not mix in Four States Ads red.
+ */
+[data-pack="emm"] {
+  --brand-primary: #58f8b8; /* EMM mint */
+  --brand-secondary: #f0f0f0; /* EMM off-white */
+  --brand-ink: #000000; /* EMM black */
+  --brand-glow: rgba(88, 248, 184, 0.09);
+}
+/* Night only: panels a touch more see-through so the Nexus field (Field.tsx) shows behind them. */
+:root:not([data-theme="day"]) [data-pack="emm"] {
+  --panel: rgba(16, 21, 29, 0.8);
+}
