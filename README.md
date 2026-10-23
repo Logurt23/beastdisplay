@@ -1,5 +1,11 @@
 # BeastDisplay
 
+> **Kept for reference. The office board lives in Nexus now.** The EMM Advertising war room board was ported into
+> Nexus (`Logurt23/nexus`, `src/warroom/` and `src/lib/warroom/`, described in `docs/WARROOM.md`) from this tree at
+> commit ac1dd94, and is served at warroom.emmadvertising.com by the Nexus web app. Screens pair with a six-digit code
+> on Nexus's Team, Screens page and hold an `nx_display` cookie; the `DISPLAY_TOKENS` bearer scheme described under
+> `nexus-display/` was never adopted. Changes to the board go to Nexus. Nothing here is deployed.
+
 BeastDisplay is a small always-on web app that shows a URL as a display. A screen opens a BeastDisplay URL and the page fills that screen with zero input after load. It can show one allowlisted URL, rotate a list, or render a built-in function pack. The first pack is `emm`, the EMM Advertising war room board, which reads from Nexus.
 
 - Core player: [docs/core.md](docs/core.md)
